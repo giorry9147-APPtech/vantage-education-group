@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vantage Education Group - Lesportaal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="home">
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="Vantage Education Group logo" class="logo" />
+    </a>
+
+    <div class="topbar-right">
+      <button class="lang-switcher" id="langToggle" type="button" aria-label="Taal wisselen">
+        <span class="globe">🌐</span>
+        <span id="langLabelNl">Nederlands</span>
+        <span class="divider">|</span>
+        <span id="langLabelEn" class="lang-alt">English</span>
+      </button>
+
+      <a href="login.html" class="top-login-btn" id="topLoginBtn">
+        <span>➜</span>
+        <span data-i18n="nav_login">Inloggen</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero full-width">
+      <div class="hero-overlay hero-overlay-left"></div>
+      <div class="hero-overlay hero-overlay-right"></div>
+
+      <div class="container hero-content">
+        <div class="hero-text">
+          <h1 data-i18n="hero_title">Lesportaal voor leerkrachten</h1>
+          <p data-i18n="hero_subtitle">
+            Download lessen per vak, bekijk notities en werk vanuit één centrale omgeving.
+          </p>
+        </div>
+
+        <div class="login-cards">
+          <article class="login-card teacher-card">
+            <div class="card-icon orange-icon">👩‍🏫</div>
+            <h2 data-i18n="teacher_card_title">Inloggen als leerkracht</h2>
+
+            <a href="login.html?role=teacher" class="card-btn orange-btn">
+              <span data-i18n="teacher_btn">Inloggen als leerkracht</span>
+              <span>➜</span>
+            </a>
+
+            <ul>
+              <li data-i18n="teacher_feature_1">Veilige toegang voor leerkrachten</li>
+              <li data-i18n="teacher_feature_2">Download lessen eenvoudig per vak</li>
+              <li data-i18n="teacher_feature_3">Notities van de hoofdleerkracht zichtbaar</li>
+            </ul>
+          </article>
+
+          <article class="login-card admin-card">
+            <div class="card-icon green-icon">👨‍💼</div>
+            <h2 data-i18n="admin_card_title">Inloggen als hoofdleerkracht</h2>
+
+            <a href="login.html?role=admin" class="card-btn green-btn">
+              <span data-i18n="admin_btn">Inloggen als hoofdleerkracht</span>
+              <span>➜</span>
+            </a>
+
+            <ul>
+              <li data-i18n="admin_feature_1">Veilige toegang voor hoofdleerkrachten</li>
+              <li data-i18n="admin_feature_2">Lessen per vak georganiseerd</li>
+              <li data-i18n="admin_feature_3">PDF's direct downloadbaar</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works full-width">
+      <div class="container">
+        <h3 data-i18n="how_title">Hoe werkt het?</h3>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-icon green-soft">🔐</div>
+            <div>
+              <h4 data-i18n="step1_title">Log in</h4>
+              <p data-i18n="step1_text">Meld je aan als leerkracht of hoofdleerkracht.</p>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-icon orange-soft">📁</div>
+            <div>
+              <h4 data-i18n="step2_title">Kies vak of categorie</h4>
+              <p data-i18n="step2_text">Bekijk beschikbare lessen per vak of klas.</p>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-icon blue-soft">📄</div>
+            <div>
+              <h4 data-i18n="step3_title">Download de les-PDF</h4>
+              <p data-i18n="step3_text">Download de les inclusief notitie.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer full-width">
+    <div class="container">
+      <div class="footer-features">
+        <div class="footer-col">
+          <p data-i18n="footer_feature_1">✔ Veilige toegang voor leerkrachten</p>
+          <p data-i18n="footer_feature_2">✔ PDF’s direct downloadbaar</p>
+        </div>
+        <div class="footer-col">
+          <p data-i18n="footer_feature_3">✔ Lessen per vak georganiseerd</p>
+          <p data-i18n="footer_feature_4">✔ Notities van hoofdleerkracht zichtbaar</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <p class="copyright">© 2024 Vantage Education Group. Alle rechten voorbehouden.</p>
+          <div class="footer-links">
+            <a href="#" data-i18n="privacy">Privacybeleid</a>
+            <a href="#" data-i18n="terms">Algemene voorwaarden</a>
+          </div>
+        </div>
+
+        <div class="socials">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Twitter">x</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

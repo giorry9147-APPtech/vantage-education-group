@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard - Vantage Education Group</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-top">
+        <img
+          src="images/logo.png"
+          alt="Vantage Education Group logo"
+          class="admin-logo"
+        />
+
+        <button class="admin-profile-btn" type="button">
+          Leerkracht
+        </button>
+
+        <nav class="admin-nav">
+          <button class="admin-nav-link active" data-tab="teacher-overview-section" type="button">
+            Dashboard
+          </button>
+
+          <button class="admin-nav-link" data-tab="teacher-subjects-section" type="button">
+            Vakken
+          </button>
+        </nav>
+      </div>
+
+      <button id="logoutBtn" class="admin-logout-btn" type="button">
+        Uitloggen
+      </button>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <p class="admin-welcome">Welkom terug</p>
+          <h1 id="teacherName">Teacher Dashboard</h1>
+        </div>
+
+        <div class="admin-topbar-right">
+          <span class="admin-status">Beveiligde leerkracht omgeving</span>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="teacher-overview-section" class="admin-tab-section active">
+        <div class="admin-overview-cards">
+          <article class="overview-card">
+            <p>Totaal vakken</p>
+            <h2 id="teacherSubjectsCount">0</h2>
+          </article>
+
+          <article class="overview-card">
+            <p>Totaal categorieën</p>
+            <h2 id="teacherCategoriesCount">0</h2>
+          </article>
+
+          <article class="overview-card">
+            <p>Totaal lessen</p>
+            <h2 id="teacherLessonsCount">0</h2>
+          </article>
+        </div>
+
+        <div class="admin-card">
+          <h3>Kies een vak</h3>
+          <div id="teacherSubjectsGrid" class="dashboard-subjects-grid"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="teacher-selection-header">
+            <div>
+              <h3 id="selectedSubjectTitle">Nog geen vak gekozen</h3>
+              <p id="selectedSubjectSubtitle" class="list-meta">
+                Klik op een vak om categorieën en lessen te bekijken.
+              </p>
+            </div>
+          </div>
+
+          <div class="teacher-two-column">
+            <div>
+              <h4 class="teacher-panel-title">Categorieën</h4>
+              <div id="teacherCategoriesPanel" class="simple-list"></div>
+            </div>
+
+            <div>
+              <h4 class="teacher-panel-title">Lessen</h4>
+              <div id="teacherLessonsPanel" class="simple-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VAKKEN -->
+      <section id="teacher-subjects-section" class="admin-tab-section">
+        <div class="admin-section-header">
+          <div>
+            <p class="section-kicker">Overzicht</p>
+            <h2>Vakken</h2>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Alle vakken</h3>
+          <div id="teacherSubjectsTree" class="subjects-tree"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="teacher.js"></script>
+</body>
+</html>

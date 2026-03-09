@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inloggen - Vantage Education Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login">
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="Vantage Education Group logo" class="logo" />
+    </a>
+
+    <div class="topbar-right">
+      <button class="lang-switcher" id="langToggle" type="button" aria-label="Taal wisselen">
+        <span class="globe">🌐</span>
+        <span id="langLabelNl">Nederlands</span>
+        <span class="divider">|</span>
+        <span id="langLabelEn" class="lang-alt">English</span>
+      </button>
+
+      <a href="index.html" class="top-login-btn">
+        <span>←</span>
+        <span data-i18n="back_home">Terug naar home</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="login-page">
+    <section class="login-hero">
+      <div class="login-hero-bg"></div>
+
+      <div class="container login-layout">
+        <div class="login-left">
+          <span class="role-badge" id="roleBadge">Leerkracht</span>
+          <h1 id="loginTitle" data-i18n="login_title_teacher">Inloggen als leerkracht</h1>
+          <p id="loginSubtitle" data-i18n="login_subtitle_teacher">
+            Log in om lessen te downloaden, notities te bekijken en per vak te werken.
+          </p>
+
+          <div class="login-info-card">
+            <h3 data-i18n="login_info_title">Wat kun je hier doen?</h3>
+            <ul id="roleFeatureList">
+              <li data-i18n="login_teacher_feature_1">Lessen bekijken per vak</li>
+              <li data-i18n="login_teacher_feature_2">PDF’s downloaden</li>
+              <li data-i18n="login_teacher_feature_3">Notities van hoofdleerkracht lezen</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="login-right">
+          <div class="auth-card">
+            <div class="role-switch">
+              <button class="role-switch-btn active" id="teacherRoleBtn" type="button">
+                <span data-i18n="teacher_role">Leerkracht</span>
+              </button>
+              <button class="role-switch-btn" id="adminRoleBtn" type="button">
+                <span data-i18n="admin_role">Hoofdleerkracht</span>
+              </button>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+              <div class="form-group">
+                <label for="email" data-i18n="email_label">E-mailadres</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="naam@school.org"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="password" data-i18n="password_label">Wachtwoord</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <div class="form-row">
+                <label class="remember-row">
+                  <input type="checkbox" />
+                  <span data-i18n="remember_me">Onthoud mij</span>
+                </label>
+
+                <a href="#" class="forgot-link" data-i18n="forgot_password">Wachtwoord vergeten?</a>
+              </div>
+
+              <button type="submit" class="submit-btn" id="submitBtn">
+                <span data-i18n="login_btn_main">Inloggen</span>
+              </button>
+
+              <p class="demo-note" id="demoNote">
+                Demo: deze knop stuurt nog niet naar Supabase, alleen frontend flow.
+              </p>
+            </form>
+
+            <div class="back-links">
+              <a href="index.html" data-i18n="back_home_text">← Terug naar home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
