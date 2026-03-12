@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16366c" />
   <title>Admin Dashboard - Vantage Education Group</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,41 +17,58 @@
 </head>
 <body class="admin-body">
   <div class="admin-layout">
-    <aside class="admin-sidebar">
-  <div class="admin-sidebar-top">
-    <img
-      src="images/logo.png"
-      alt="Vantage Education Group logo"
-      class="admin-logo"
-    />
+    <aside class="admin-sidebar" aria-label="Admin navigatie">
+      <div class="admin-sidebar-top">
+        <img
+          src="images/logo.png"
+          alt="Vantage Education Group logo"
+          class="admin-logo"
+        />
 
-    <button class="admin-profile-btn" type="button">
-      Hoofdleerkracht
-    </button>
+        <button class="admin-profile-btn" type="button">
+          Hoofdleerkracht
+        </button>
 
-    <nav class="admin-nav">
-      <button class="admin-nav-link active" data-tab="overview-section" type="button">
-        Dashboard
+        <nav class="admin-nav" aria-label="Dashboard menu">
+          <button
+            class="admin-nav-link active"
+            data-tab="overview-section"
+            type="button"
+          >
+            Dashboard
+          </button>
+
+          <button
+            class="admin-nav-link"
+            data-tab="subjects-section"
+            type="button"
+          >
+            Vakken
+          </button>
+
+          <button
+            class="admin-nav-link"
+            data-tab="categories-section"
+            type="button"
+          >
+            Categorieën
+          </button>
+
+          <button
+            class="admin-nav-link"
+            data-tab="lessons-section"
+            type="button"
+          >
+            Lessen
+          </button>
+        </nav>
+      </div>
+
+      <button id="logoutBtn" class="admin-logout-btn" type="button">
+        Uitloggen
       </button>
+    </aside>
 
-      <button class="admin-nav-link" data-tab="subjects-section" type="button">
-        Vakken
-      </button>
-
-      <button class="admin-nav-link" data-tab="categories-section" type="button">
-        Categorieën
-      </button>
-
-      <button class="admin-nav-link" data-tab="lessons-section" type="button">
-        Lessen
-      </button>
-    </nav>
-  </div>
-
-  <button id="logoutBtn" class="admin-logout-btn" type="button">
-    Uitloggen
-  </button>
-</aside>
     <main class="admin-main">
       <header class="admin-topbar">
         <div>
@@ -83,15 +101,27 @@
         </div>
 
         <div class="dashboard-action-bar">
-          <button class="admin-secondary-btn" type="button" data-switch-tab="subjects-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="subjects-section"
+          >
             Vak toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="categories-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="categories-section"
+          >
             Categorie toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="lessons-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="lessons-section"
+          >
             Les toevoegen
           </button>
         </div>
@@ -117,15 +147,27 @@
         </div>
 
         <div class="dashboard-action-bar">
-          <button class="admin-secondary-btn" type="button" data-switch-tab="subjects-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="subjects-section"
+          >
             Vak toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="categories-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="categories-section"
+          >
             Categorie toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="lessons-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="lessons-section"
+          >
             Les toevoegen
           </button>
         </div>
@@ -164,15 +206,27 @@
         </div>
 
         <div class="dashboard-action-bar">
-          <button class="admin-secondary-btn" type="button" data-switch-tab="subjects-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="subjects-section"
+          >
             Vak toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="categories-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="categories-section"
+          >
             Categorie toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="lessons-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="lessons-section"
+          >
             Les toevoegen
           </button>
         </div>
@@ -218,15 +272,27 @@
         </div>
 
         <div class="dashboard-action-bar">
-          <button class="admin-secondary-btn" type="button" data-switch-tab="subjects-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="subjects-section"
+          >
             Vak toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="categories-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="categories-section"
+          >
             Categorie toevoegen
           </button>
 
-          <button class="admin-secondary-btn" type="button" data-switch-tab="lessons-section">
+          <button
+            class="admin-secondary-btn"
+            type="button"
+            data-switch-tab="lessons-section"
+          >
             Les toevoegen
           </button>
         </div>

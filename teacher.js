@@ -49,15 +49,29 @@ function setupTeacherTabs() {
   const navButtons = document.querySelectorAll(".admin-nav-link");
   const sections = document.querySelectorAll(".admin-tab-section");
 
+  function activateTab(targetId) {
+    navButtons.forEach((btn) => btn.classList.remove("active"));
+    sections.forEach((section) => section.classList.remove("active"));
+
+    const activeNav = document.querySelector(
+      `.admin-nav-link[data-tab="${targetId}"]`
+    );
+    const activeSection = document.getElementById(targetId);
+
+    activeNav?.classList.add("active");
+    activeSection?.classList.add("active");
+
+    if (window.innerWidth <= 1024 && activeSection) {
+      activeSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  }
+
   navButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const targetId = button.dataset.tab;
-
-      navButtons.forEach((btn) => btn.classList.remove("active"));
-      sections.forEach((section) => section.classList.remove("active"));
-
-      button.classList.add("active");
-      document.getElementById(targetId)?.classList.add("active");
+      activateTab(button.dataset.tab);
     });
   });
 }
@@ -102,6 +116,10 @@ async function loadTeacherCategories() {
   teacherCategories = data || [];
   renderTeacherSubjectsTree();
   updateTeacherCounts();
+
+  if (selectedSubjectId) {
+    renderTeacherSubjectDetails(selectedSubjectId);
+  }
 }
 
 async function loadTeacherLessons() {
@@ -134,6 +152,14 @@ async function loadTeacherLessons() {
   teacherLessons = data || [];
   renderTeacherSubjectsTree();
   updateTeacherCounts();
+
+  if (selectedSubjectId) {
+    renderTeacherSubjectDetails(selectedSubjectId);
+  }
+
+  if (selectedCategoryId) {
+    renderTeacherLessonsForCategory(selectedCategoryId);
+  }
 }
 
 function updateTeacherCounts() {
@@ -166,7 +192,11 @@ function renderTeacherSubjectsGrid() {
       ).length;
 
       return `
-        <button class="teacher-subject-btn" data-subject-id="${subject.id}" type="button">
+        <button
+          class="teacher-subject-btn"
+          data-subject-id="${subject.id}"
+          type="button"
+        >
           <span class="teacher-subject-btn-title">${escapeHtml(subject.name)}</span>
           <span class="list-meta">Categorieën: ${categoryCount}</span>
           <span class="list-meta">Lessen: ${lessonCount}</span>
@@ -174,6 +204,8 @@ function renderTeacherSubjectsGrid() {
       `;
     })
     .join("");
+
+  highlightActiveSubjectButton();
 }
 
 function renderTeacherSubjectsTree() {
@@ -194,7 +226,13 @@ function renderTeacherSubjectsTree() {
       return `
         <div class="tree-subject">
           <div class="tree-row">
-            <button class="tree-toggle" type="button" data-target="teacher-subject-${subject.id}">
+            <button
+              class="tree-toggle"
+              type="button"
+              data-target="teacher-subject-${subject.id}"
+              aria-expanded="false"
+              aria-label="Toon of verberg categorieën van ${escapeHtml(subject.name)}"
+            >
               ▶
             </button>
 
@@ -217,7 +255,13 @@ function renderTeacherSubjectsTree() {
                       return `
                         <div class="tree-category">
                           <div class="tree-row tree-row-child">
-                            <button class="tree-toggle" type="button" data-target="teacher-category-${category.id}">
+                            <button
+                              class="tree-toggle"
+                              type="button"
+                              data-target="teacher-category-${category.id}"
+                              aria-expanded="false"
+                              aria-label="Toon of verberg lessen van ${escapeHtml(category.name)}"
+                            >
                               ▶
                             </button>
 
@@ -285,6 +329,14 @@ function setupTeacherSubjectButtons() {
     btn.classList.add("active");
 
     renderTeacherSubjectDetails(subjectId);
+
+    const lessonsPanel = document.getElementById("teacherLessonsPanel");
+    if (window.innerWidth <= 760 && lessonsPanel) {
+      lessonsPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
   });
 }
 
@@ -329,6 +381,8 @@ function renderTeacherSubjectDetails(subjectId) {
     .join("");
 
   lessonsPanel.innerHTML = `<p class="empty-state">Kies een categorie om lessen te zien.</p>`;
+
+  highlightActiveCategoryButton();
 }
 
 function setupTeacherCategoryButtons() {
@@ -346,6 +400,14 @@ function setupTeacherCategoryButtons() {
     btn.classList.add("active");
 
     renderTeacherLessonsForCategory(categoryId);
+
+    const lessonsPanel = document.getElementById("teacherLessonsPanel");
+    if (window.innerWidth <= 760 && lessonsPanel) {
+      lessonsPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
   });
 }
 
@@ -394,6 +456,7 @@ function setupTeacherTreeToggles() {
     const isOpen = target.classList.contains("open");
     target.classList.toggle("open");
     toggle.textContent = isOpen ? "▶" : "▼";
+    toggle.setAttribute("aria-expanded", String(!isOpen));
   });
 }
 
@@ -435,8 +498,40 @@ function setupTeacherLogout() {
   if (!logoutBtn) return;
 
   logoutBtn.addEventListener("click", async () => {
-    await window.supabaseClient.auth.signOut();
-    window.location.href = "login.html";
+    logoutBtn.disabled = true;
+    logoutBtn.textContent = "Bezig...";
+
+    try {
+      await window.supabaseClient.auth.signOut();
+      window.location.href = "login.html";
+    } catch (error) {
+      console.error("Uitloggen mislukt:", error);
+      alert("Uitloggen mislukt.");
+      logoutBtn.disabled = false;
+      logoutBtn.textContent = "Uitloggen";
+    }
+  });
+}
+
+function highlightActiveSubjectButton() {
+  if (!selectedSubjectId) return;
+
+  document.querySelectorAll(".teacher-subject-btn").forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.subjectId === selectedSubjectId
+    );
+  });
+}
+
+function highlightActiveCategoryButton() {
+  if (!selectedCategoryId) return;
+
+  document.querySelectorAll(".teacher-category-btn").forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.categoryId === selectedCategoryId
+    );
   });
 }
 

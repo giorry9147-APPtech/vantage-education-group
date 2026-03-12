@@ -51,9 +51,20 @@ function setupTabs() {
     navButtons.forEach((btn) => btn.classList.remove("active"));
     sections.forEach((section) => section.classList.remove("active"));
 
-    const activeNav = document.querySelector(`.admin-nav-link[data-tab="${targetId}"]`);
+    const activeNav = document.querySelector(
+      `.admin-nav-link[data-tab="${targetId}"]`
+    );
+    const activeSection = document.getElementById(targetId);
+
     activeNav?.classList.add("active");
-    document.getElementById(targetId)?.classList.add("active");
+    activeSection?.classList.add("active");
+
+    if (window.innerWidth <= 1024 && activeSection) {
+      activeSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
   }
 
   navButtons.forEach((button) => {
@@ -65,6 +76,7 @@ function setupTabs() {
   document.addEventListener("click", (event) => {
     const switchBtn = event.target.closest("[data-switch-tab]");
     if (!switchBtn) return;
+
     activateTab(switchBtn.dataset.switchTab);
   });
 }
@@ -197,7 +209,13 @@ function renderSubjectsTree() {
       return `
         <div class="tree-subject">
           <div class="tree-row">
-            <button class="tree-toggle" type="button" data-target="subject-${subject.id}">
+            <button
+              class="tree-toggle"
+              type="button"
+              data-target="subject-${subject.id}"
+              aria-expanded="false"
+              aria-label="Toon of verberg categorieën van ${escapeHtml(subject.name)}"
+            >
               ▶
             </button>
 
@@ -208,7 +226,13 @@ function renderSubjectsTree() {
             </div>
 
             <div class="item-actions">
-              <button class="delete-btn" data-type="subject" data-id="${subject.id}" data-name="${escapeHtml(subject.name)}">
+              <button
+                class="delete-btn"
+                data-type="subject"
+                data-id="${subject.id}"
+                data-name="${escapeHtml(subject.name)}"
+                type="button"
+              >
                 Verwijderen
               </button>
             </div>
@@ -227,7 +251,13 @@ function renderSubjectsTree() {
                       return `
                         <div class="tree-category">
                           <div class="tree-row tree-row-child">
-                            <button class="tree-toggle" type="button" data-target="category-${category.id}">
+                            <button
+                              class="tree-toggle"
+                              type="button"
+                              data-target="category-${category.id}"
+                              aria-expanded="false"
+                              aria-label="Toon of verberg lessen van ${escapeHtml(category.name)}"
+                            >
                               ▶
                             </button>
 
@@ -238,7 +268,13 @@ function renderSubjectsTree() {
                             </div>
 
                             <div class="item-actions">
-                              <button class="delete-btn" data-type="category" data-id="${category.id}" data-name="${escapeHtml(category.name)}">
+                              <button
+                                class="delete-btn"
+                                data-type="category"
+                                data-id="${category.id}"
+                                data-name="${escapeHtml(category.name)}"
+                                type="button"
+                              >
                                 Verwijderen
                               </button>
                             </div>
@@ -270,6 +306,7 @@ function renderSubjectsTree() {
                                                 data-id="${lesson.id}"
                                                 data-name="${escapeHtml(lesson.title)}"
                                                 data-pdf-path="${lesson.pdf_path || ""}"
+                                                type="button"
                                               >
                                                 Verwijderen
                                               </button>
@@ -312,7 +349,13 @@ function renderCategories() {
             <span class="list-meta">Aangemaakt op: ${formatDateTime(category.created_at)}</span>
           </div>
           <div class="item-actions">
-            <button class="delete-btn" data-type="category" data-id="${category.id}" data-name="${escapeHtml(category.name)}">
+            <button
+              class="delete-btn"
+              data-type="category"
+              data-id="${category.id}"
+              data-name="${escapeHtml(category.name)}"
+              type="button"
+            >
               Verwijderen
             </button>
           </div>
@@ -353,6 +396,7 @@ function renderLessons() {
               data-id="${lesson.id}"
               data-name="${escapeHtml(lesson.title)}"
               data-pdf-path="${lesson.pdf_path || ""}"
+              type="button"
             >
               Verwijderen
             </button>
@@ -440,6 +484,7 @@ function setupTreeToggles() {
     const isOpen = target.classList.contains("open");
     target.classList.toggle("open");
     toggle.textContent = isOpen ? "▶" : "▼";
+    toggle.setAttribute("aria-expanded", String(!isOpen));
   });
 }
 
@@ -458,19 +503,33 @@ function setupSubjectForm() {
       return;
     }
 
-    const { error } = await window.supabaseClient.from("subjects").insert({
-      name,
-      created_by: currentUser.id
-    });
+    const submitButton = subjectForm.querySelector('button[type="submit"]');
 
-    if (error) {
-      console.error(error);
-      alert(error.message || "Vak toevoegen mislukt.");
-      return;
+    try {
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Bezig...";
+      }
+
+      const { error } = await window.supabaseClient.from("subjects").insert({
+        name,
+        created_by: currentUser.id
+      });
+
+      if (error) {
+        console.error(error);
+        alert(error.message || "Vak toevoegen mislukt.");
+        return;
+      }
+
+      subjectForm.reset();
+      await refreshAllData();
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Vak toevoegen";
+      }
     }
-
-    subjectForm.reset();
-    await refreshAllData();
   });
 }
 
@@ -489,20 +548,34 @@ function setupCategoryForm() {
       return;
     }
 
-    const { error } = await window.supabaseClient.from("categories").insert({
-      subject_id: subjectId,
-      name: categoryName,
-      created_by: currentUser.id
-    });
+    const submitButton = categoryForm.querySelector('button[type="submit"]');
 
-    if (error) {
-      console.error(error);
-      alert(error.message || "Categorie toevoegen mislukt.");
-      return;
+    try {
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Bezig...";
+      }
+
+      const { error } = await window.supabaseClient.from("categories").insert({
+        subject_id: subjectId,
+        name: categoryName,
+        created_by: currentUser.id
+      });
+
+      if (error) {
+        console.error(error);
+        alert(error.message || "Categorie toevoegen mislukt.");
+        return;
+      }
+
+      categoryForm.reset();
+      await refreshAllData();
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Categorie toevoegen";
+      }
     }
-
-    categoryForm.reset();
-    await refreshAllData();
   });
 }
 
@@ -647,6 +720,9 @@ function setupDeleteActions() {
     } catch (error) {
       console.error("Verwijderen mislukt:", error);
       alert(error.message || "Verwijderen mislukt.");
+    } finally {
+      deleteBtn.disabled = false;
+      deleteBtn.textContent = "Verwijderen";
     }
   });
 }
@@ -656,8 +732,18 @@ function setupLogout() {
   if (!logoutBtn) return;
 
   logoutBtn.addEventListener("click", async () => {
-    await window.supabaseClient.auth.signOut();
-    window.location.href = "login.html";
+    logoutBtn.disabled = true;
+    logoutBtn.textContent = "Bezig...";
+
+    try {
+      await window.supabaseClient.auth.signOut();
+      window.location.href = "login.html";
+    } catch (error) {
+      console.error("Uitloggen mislukt:", error);
+      alert("Uitloggen mislukt.");
+      logoutBtn.disabled = false;
+      logoutBtn.textContent = "Uitloggen";
+    }
   });
 }
 

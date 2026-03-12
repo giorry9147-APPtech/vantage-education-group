@@ -2,7 +2,8 @@ const translations = {
   nl: {
     nav_login: "Inloggen",
     hero_title: "Lesportaal voor leerkrachten",
-    hero_subtitle: "Download lessen per vak, bekijk notities en werk vanuit één centrale omgeving.",
+    hero_subtitle:
+      "Download lessen per vak, bekijk notities en werk vanuit één centrale omgeving.",
 
     teacher_card_title: "Inloggen als leerkracht",
     teacher_btn: "Inloggen als leerkracht",
@@ -43,22 +44,27 @@ const translations = {
     login_info_title: "Wat kun je hier doen?",
 
     login_title_teacher: "Inloggen als leerkracht",
-    login_subtitle_teacher: "Log in om lessen te downloaden, notities te bekijken en per vak te werken.",
+    login_subtitle_teacher:
+      "Log in om lessen te downloaden, notities te bekijken en per vak te werken.",
     login_teacher_feature_1: "Lessen bekijken per vak",
     login_teacher_feature_2: "PDF’s downloaden",
     login_teacher_feature_3: "Notities van hoofdleerkracht lezen",
 
     login_title_admin: "Inloggen als hoofdleerkracht",
-    login_subtitle_admin: "Log in om lessen te uploaden, categorieën te beheren en notities toe te voegen.",
+    login_subtitle_admin:
+      "Log in om lessen te uploaden, categorieën te beheren en notities toe te voegen.",
     login_admin_feature_1: "Nieuwe lessen uploaden",
     login_admin_feature_2: "Vakken en categorieën beheren",
-    login_admin_feature_3: "Korte notities toevoegen"
+    login_admin_feature_3: "Korte notities toevoegen",
+
+    login_loading: "Bezig met inloggen..."
   },
 
   en: {
     nav_login: "Login",
     hero_title: "Lesson portal for teachers",
-    hero_subtitle: "Download lessons by subject, read notes, and work from one central environment.",
+    hero_subtitle:
+      "Download lessons by subject, read notes, and work from one central environment.",
 
     teacher_card_title: "Login as teacher",
     teacher_btn: "Login as teacher",
@@ -99,16 +105,20 @@ const translations = {
     login_info_title: "What can you do here?",
 
     login_title_teacher: "Login as teacher",
-    login_subtitle_teacher: "Log in to download lessons, read notes and work by subject.",
+    login_subtitle_teacher:
+      "Log in to download lessons, read notes and work by subject.",
     login_teacher_feature_1: "View lessons by subject",
     login_teacher_feature_2: "Download PDFs",
     login_teacher_feature_3: "Read notes from the lead teacher",
 
     login_title_admin: "Login as lead teacher",
-    login_subtitle_admin: "Log in to upload lessons, manage categories and add notes.",
+    login_subtitle_admin:
+      "Log in to upload lessons, manage categories and add notes.",
     login_admin_feature_1: "Upload new lessons",
     login_admin_feature_2: "Manage subjects and categories",
-    login_admin_feature_3: "Add short notes"
+    login_admin_feature_3: "Add short notes",
+
+    login_loading: "Logging in..."
   }
 };
 
@@ -116,8 +126,12 @@ const defaultLanguage = localStorage.getItem("siteLanguage") || "nl";
 const urlParams = new URLSearchParams(window.location.search);
 let currentRole = urlParams.get("role") || "teacher";
 
+function getCurrentLanguage() {
+  return localStorage.getItem("siteLanguage") || "nl";
+}
+
 function applyTranslations(language) {
-  const dict = translations[language];
+  const dict = translations[language] || translations.nl;
 
   document.documentElement.lang = language;
 
@@ -128,24 +142,27 @@ function applyTranslations(language) {
     }
   });
 
-  const langNl = document.getElementById("langLabelNl");
-  const langEn = document.getElementById("langLabelEn");
-
-  if (langNl && langEn) {
-    if (language === "nl") {
-      langNl.classList.add("lang-alt");
-      langEn.classList.remove("lang-alt");
-    } else {
-      langEn.classList.add("lang-alt");
-      langNl.classList.remove("lang-alt");
-    }
-  }
-
+  updateLanguageLabels(language);
   updateLoginRoleContent(language, currentRole);
 }
 
+function updateLanguageLabels(language) {
+  const langNl = document.getElementById("langLabelNl");
+  const langEn = document.getElementById("langLabelEn");
+
+  if (!langNl || !langEn) return;
+
+  if (language === "nl") {
+    langNl.classList.add("lang-alt");
+    langEn.classList.remove("lang-alt");
+  } else {
+    langEn.classList.add("lang-alt");
+    langNl.classList.remove("lang-alt");
+  }
+}
+
 function updateLoginRoleContent(language, role) {
-  const dict = translations[language];
+  const dict = translations[language] || translations.nl;
 
   const roleBadge = document.getElementById("roleBadge");
   const loginTitle = document.getElementById("loginTitle");
@@ -182,10 +199,16 @@ function updateLoginRoleContent(language, role) {
 }
 
 function toggleLanguage() {
-  const currentLanguage = localStorage.getItem("siteLanguage") || "nl";
+  const currentLanguage = getCurrentLanguage();
   const nextLanguage = currentLanguage === "nl" ? "en" : "nl";
+
   localStorage.setItem("siteLanguage", nextLanguage);
   applyTranslations(nextLanguage);
+}
+
+function updateRoleInUrl(role) {
+  const path = window.location.pathname.split("/").pop() || "login.html";
+  history.replaceState({}, "", `${path}?role=${role}`);
 }
 
 function setupRoleButtons() {
@@ -194,14 +217,14 @@ function setupRoleButtons() {
 
   teacherRoleBtn?.addEventListener("click", () => {
     currentRole = "teacher";
-    updateLoginRoleContent(localStorage.getItem("siteLanguage") || "nl", currentRole);
-    history.replaceState({}, "", "login.html?role=teacher");
+    updateLoginRoleContent(getCurrentLanguage(), currentRole);
+    updateRoleInUrl("teacher");
   });
 
   adminRoleBtn?.addEventListener("click", () => {
     currentRole = "admin";
-    updateLoginRoleContent(localStorage.getItem("siteLanguage") || "nl", currentRole);
-    history.replaceState({}, "", "login.html?role=admin");
+    updateLoginRoleContent(getCurrentLanguage(), currentRole);
+    updateRoleInUrl("admin");
   });
 }
 
@@ -215,20 +238,29 @@ function setupLoginForm() {
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("password")?.value.trim();
     const submitBtn = document.getElementById("submitBtn");
+    const currentLanguage = getCurrentLanguage();
+    const dict = translations[currentLanguage] || translations.nl;
 
     if (!email || !password) {
-      alert("Vul eerst e-mail en wachtwoord in.");
+      alert(
+        currentLanguage === "en"
+          ? "Please enter your email and password first."
+          : "Vul eerst e-mail en wachtwoord in."
+      );
       return;
     }
 
     try {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Bezig met inloggen...";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = dict.login_loading || "Bezig...";
+      }
 
-      const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { data, error } =
+        await window.supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
 
       if (error) {
         throw error;
@@ -237,7 +269,11 @@ function setupLoginForm() {
       const user = data.user;
 
       if (!user) {
-        throw new Error("Geen gebruiker gevonden na login.");
+        throw new Error(
+          currentLanguage === "en"
+            ? "No user found after login."
+            : "Geen gebruiker gevonden na login."
+        );
       }
 
       const { data: profile, error: profileError } = await window.supabaseClient
@@ -251,7 +287,11 @@ function setupLoginForm() {
       }
 
       if (!profile) {
-        throw new Error("Geen profiel gevonden voor deze gebruiker.");
+        throw new Error(
+          currentLanguage === "en"
+            ? "No profile found for this user."
+            : "Geen profiel gevonden voor deze gebruiker."
+        );
       }
 
       if (profile.role === "admin") {
@@ -259,14 +299,22 @@ function setupLoginForm() {
       } else if (profile.role === "teacher") {
         window.location.href = "teacher-dashboard.html";
       } else {
-        alert("Onbekende rol gevonden.");
+        alert(
+          currentLanguage === "en"
+            ? "Unknown role found."
+            : "Onbekende rol gevonden."
+        );
       }
     } catch (error) {
       console.error("Login fout:", error);
       alert(error.message || "Inloggen mislukt.");
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Inloggen";
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span data-i18n="login_btn_main">${
+          (translations[getCurrentLanguage()] || translations.nl).login_btn_main
+        }</span>`;
+      }
     }
   });
 }

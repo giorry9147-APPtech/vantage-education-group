@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16366c" />
   <title>Teacher Dashboard - Vantage Education Group</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,7 +17,7 @@
 </head>
 <body class="admin-body">
   <div class="admin-layout">
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" aria-label="Leerkracht navigatie">
       <div class="admin-sidebar-top">
         <img
           src="images/logo.png"
@@ -28,12 +29,20 @@
           Leerkracht
         </button>
 
-        <nav class="admin-nav">
-          <button class="admin-nav-link active" data-tab="teacher-overview-section" type="button">
+        <nav class="admin-nav" aria-label="Teacher dashboard menu">
+          <button
+            class="admin-nav-link active"
+            data-tab="teacher-overview-section"
+            type="button"
+          >
             Dashboard
           </button>
 
-          <button class="admin-nav-link" data-tab="teacher-subjects-section" type="button">
+          <button
+            class="admin-nav-link"
+            data-tab="teacher-subjects-section"
+            type="button"
+          >
             Vakken
           </button>
         </nav>

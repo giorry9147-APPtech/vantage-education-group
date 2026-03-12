@@ -3,23 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16366c" />
   <title>Inloggen - Vantage Education Group</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-page="login">
   <header class="topbar">
-    <a href="index.html" class="brand">
-      <img src="images/logo.png" alt="Vantage Education Group logo" class="logo" />
+    <a href="index.html" class="brand" aria-label="Ga naar home">
+      <img
+        src="images/logo.png"
+        alt="Vantage Education Group logo"
+        class="logo"
+      />
     </a>
 
     <div class="topbar-right">
-      <button class="lang-switcher" id="langToggle" type="button" aria-label="Taal wisselen">
+      <button
+        class="lang-switcher"
+        id="langToggle"
+        type="button"
+        aria-label="Taal wisselen"
+      >
         <span class="globe">🌐</span>
         <span id="langLabelNl">Nederlands</span>
         <span class="divider">|</span>
@@ -40,7 +52,11 @@
       <div class="container login-layout">
         <div class="login-left">
           <span class="role-badge" id="roleBadge">Leerkracht</span>
-          <h1 id="loginTitle" data-i18n="login_title_teacher">Inloggen als leerkracht</h1>
+
+          <h1 id="loginTitle" data-i18n="login_title_teacher">
+            Inloggen als leerkracht
+          </h1>
+
           <p id="loginSubtitle" data-i18n="login_subtitle_teacher">
             Log in om lessen te downloaden, notities te bekijken en per vak te werken.
           </p>
@@ -58,10 +74,19 @@
         <div class="login-right">
           <div class="auth-card">
             <div class="role-switch">
-              <button class="role-switch-btn active" id="teacherRoleBtn" type="button">
+              <button
+                class="role-switch-btn active"
+                id="teacherRoleBtn"
+                type="button"
+              >
                 <span data-i18n="teacher_role">Leerkracht</span>
               </button>
-              <button class="role-switch-btn" id="adminRoleBtn" type="button">
+
+              <button
+                class="role-switch-btn"
+                id="adminRoleBtn"
+                type="button"
+              >
                 <span data-i18n="admin_role">Hoofdleerkracht</span>
               </button>
             </div>
@@ -74,6 +99,7 @@
                   id="email"
                   name="email"
                   placeholder="naam@school.org"
+                  autocomplete="email"
                   required
                 />
               </div>
@@ -85,6 +111,7 @@
                   id="password"
                   name="password"
                   placeholder="••••••••"
+                  autocomplete="current-password"
                   required
                 />
               </div>
@@ -95,7 +122,9 @@
                   <span data-i18n="remember_me">Onthoud mij</span>
                 </label>
 
-                <a href="#" class="forgot-link" data-i18n="forgot_password">Wachtwoord vergeten?</a>
+                <a href="#" class="forgot-link" data-i18n="forgot_password">
+                  Wachtwoord vergeten?
+                </a>
               </div>
 
               <button type="submit" class="submit-btn" id="submitBtn">
@@ -115,6 +144,7 @@
       </div>
     </section>
   </main>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script src="app.js"></script>
