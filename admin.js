@@ -567,17 +567,11 @@ function setupCreateAdminForm() {
 
     const fullName = document.getElementById("newAdminFullName")?.value.trim();
     const email = document.getElementById("newAdminEmail")?.value.trim().toLowerCase();
-    const temporaryPassword = document.getElementById("newAdminTempPassword")?.value.trim();
 
     setCreateAdminMessage("");
 
-    if (!fullName || !email || !temporaryPassword) {
+    if (!fullName || !email) {
       setCreateAdminMessage("Vul alle velden in.");
-      return;
-    }
-
-    if (temporaryPassword.length < 8) {
-      setCreateAdminMessage("Tijdelijk wachtwoord moet minimaal 8 tekens zijn.");
       return;
     }
 
@@ -601,8 +595,7 @@ function setupCreateAdminForm() {
         },
         body: JSON.stringify({
           fullName,
-          email,
-          temporaryPassword
+          email
         })
       });
 
@@ -619,7 +612,7 @@ function setupCreateAdminForm() {
 
       form.reset();
       setCreateAdminMessage(
-        "Admin account aangemaakt. Bij eerste login moet deze gebruiker het wachtwoord wijzigen.",
+        "Admin account aangemaakt. Een wachtwoord-instelvlink is verzonden naar " + email + ".",
         "success"
       );
     } catch (error) {

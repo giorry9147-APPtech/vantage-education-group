@@ -77,20 +77,14 @@ module.exports = async function handler(req, res) {
   }
   const fullName = String(body.fullName || "").trim();
   const email = String(body.email || "").trim().toLowerCase();
-  const temporaryPassword = String(body.temporaryPassword || "").trim();
 
-  if (!fullName || !email || !temporaryPassword) {
-    return json(res, 400, { error: "fullName, email and temporaryPassword are required." });
-  }
-
-  if (temporaryPassword.length < 8) {
-    return json(res, 400, { error: "temporaryPassword must contain at least 8 characters." });
+  if (!fullName || !email) {
+    return json(res, 400, { error: "fullName and email are required." });
   }
 
   try {
     const { data: createdData, error: createError } = await supabase.auth.admin.createUser({
       email,
-      password: temporaryPassword,
       email_confirm: true,
       user_metadata: { full_name: fullName }
     });
@@ -117,13 +111,27 @@ module.exports = async function handler(req, res) {
       throw profileUpsertError;
     }
 
+    const redirectUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/reset-password.html`
+      : process.env.NEXT_PUBLIC_SITE_URL
+      ? `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password.html`
+      : "http://localhost:3000/reset-password.html";
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl
+    });
+
+    if (resetError) {
+      console.warn("Warning: Password reset email could not be sent:", resetError);
+    }
+
     return json(res, 200, {
       success: true,
       user: {
         id: newUserId,
         email
       },
-      forcedPasswordChange: true
+      passwordResetEmailSent: !resetError
     });
   } catch (error) {
     return json(res, 400, { error: error.message || "Failed to create admin." });
