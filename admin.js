@@ -18,7 +18,7 @@ async function requireAdmin() {
 
   const { data: profile, error: profileError } = await window.supabaseClient
     .from("profiles")
-    .select("id, full_name, role")
+    .select("id, full_name, role, must_change_password")
     .eq("id", user.id)
     .single();
 
@@ -30,6 +30,11 @@ async function requireAdmin() {
 
   if (profile.role !== "admin") {
     window.location.href = "teacher-dashboard.html";
+    return null;
+  }
+
+  if (profile.must_change_password) {
+    window.location.href = "change-password.html";
     return null;
   }
 
@@ -537,6 +542,95 @@ function setupDownloadSearch() {
   });
 }
 
+function setCreateAdminMessage(message, type = "error") {
+  const messageEl = document.getElementById("createAdminMessage");
+  if (!messageEl) return;
+
+  messageEl.textContent = message;
+  messageEl.className = `form-message ${type === "success" ? "success" : ""}`.trim();
+}
+
+function setCreateAdminLoading(isLoading) {
+  const submitBtn = document.getElementById("createAdminSubmitBtn");
+  if (!submitBtn) return;
+
+  submitBtn.disabled = isLoading;
+  submitBtn.textContent = isLoading ? "Bezig met aanmaken..." : "Admin aanmaken";
+}
+
+function setupCreateAdminForm() {
+  const form = document.getElementById("createAdminForm");
+  if (!form) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const fullName = document.getElementById("newAdminFullName")?.value.trim();
+    const email = document.getElementById("newAdminEmail")?.value.trim().toLowerCase();
+    const temporaryPassword = document.getElementById("newAdminTempPassword")?.value.trim();
+
+    setCreateAdminMessage("");
+
+    if (!fullName || !email || !temporaryPassword) {
+      setCreateAdminMessage("Vul alle velden in.");
+      return;
+    }
+
+    if (temporaryPassword.length < 8) {
+      setCreateAdminMessage("Tijdelijk wachtwoord moet minimaal 8 tekens zijn.");
+      return;
+    }
+
+    try {
+      setCreateAdminLoading(true);
+
+      const {
+        data: { session },
+        error: sessionError
+      } = await window.supabaseClient.auth.getSession();
+
+      if (sessionError || !session?.access_token) {
+        throw new Error("Je sessie is verlopen. Log opnieuw in.");
+      }
+
+      const response = await fetch("/api/admin/create-admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          fullName,
+          email,
+          temporaryPassword
+        })
+      });
+
+      let payload = null;
+      try {
+        payload = await response.json();
+      } catch {
+        payload = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(payload?.error || "Admin aanmaken mislukt.");
+      }
+
+      form.reset();
+      setCreateAdminMessage(
+        "Admin account aangemaakt. Bij eerste login moet deze gebruiker het wachtwoord wijzigen.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Create admin error:", error);
+      setCreateAdminMessage(error.message || "Admin aanmaken mislukt.");
+    } finally {
+      setCreateAdminLoading(false);
+    }
+  });
+}
+
 function setupTreeToggles() {
   document.addEventListener("click", (event) => {
     const toggle = event.target.closest(".tree-toggle");
@@ -847,6 +941,7 @@ async function initAdminDashboard() {
   setupTabs();
   setupTreeToggles();
   setupLogout();
+  setupCreateAdminForm();
   setupSubjectForm();
   setupCategoryForm();
   setupLessonForm();

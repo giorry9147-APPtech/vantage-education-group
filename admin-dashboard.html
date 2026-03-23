@@ -133,6 +133,48 @@
         </div>
 
         <div class="admin-card">
+          <h3>Nieuwe admin aanmaken</h3>
+          <form id="createAdminForm" class="admin-form">
+            <div class="form-group">
+              <label for="newAdminFullName">Volledige naam</label>
+              <input
+                type="text"
+                id="newAdminFullName"
+                placeholder="Bijv. Fatima Bouazza"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="newAdminEmail">E-mailadres</label>
+              <input
+                type="email"
+                id="newAdminEmail"
+                placeholder="admin@school.org"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="newAdminTempPassword">Tijdelijk wachtwoord</label>
+              <input
+                type="password"
+                id="newAdminTempPassword"
+                placeholder="Minimaal 8 tekens"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <button type="submit" class="admin-primary-btn" id="createAdminSubmitBtn">
+              Admin aanmaken
+            </button>
+
+            <p id="createAdminMessage" class="form-message"></p>
+          </form>
+        </div>
+
+        <div class="admin-card">
           <h3>Vakken overzicht</h3>
           <div id="dashboardSubjectsGrid" class="dashboard-subjects-grid"></div>
         </div>
