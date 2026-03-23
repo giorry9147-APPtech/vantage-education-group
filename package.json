@@ -14,9 +14,6 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.57.4"
-  },
   "bugs": {
     "url": "https://github.com/giorry9147-APPtech/vantage-education-group/issues"
   },
