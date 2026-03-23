@@ -615,6 +615,7 @@ function setupCreateAdminForm() {
         "Admin account aangemaakt. Een wachtwoord-instelvlink is verzonden naar " + email + ".",
         "success"
       );
+      await refreshAllData();
     } catch (error) {
       console.error("Create admin error:", error);
       setCreateAdminMessage(error.message || "Admin aanmaken mislukt.");
