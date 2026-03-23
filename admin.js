@@ -3,6 +3,7 @@ let currentProfile = null;
 let subjectsCache = [];
 let categoriesCache = [];
 let lessonsCache = [];
+let downloadLogsCache = [];
 
 async function requireAdmin() {
   const {
@@ -157,6 +158,23 @@ async function loadLessons() {
   renderLessons();
   renderRecentLessons();
   renderSubjectsTree();
+  updateCounts();
+}
+
+async function loadDownloadLogs() {
+  const { data, error } = await window.supabaseClient
+    .from("lesson_download_logs")
+    .select("id, lesson_title, user_email, user_name, downloaded_at")
+    .order("downloaded_at", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error("Fout bij ophalen downloadlogs:", error);
+    return;
+  }
+
+  downloadLogsCache = data || [];
+  renderDownloadLogs();
   updateCounts();
 }
 
@@ -466,10 +484,57 @@ function updateCounts() {
   const subjectsCount = document.getElementById("subjectsCount");
   const categoriesCount = document.getElementById("categoriesCount");
   const lessonsCount = document.getElementById("lessonsCount");
+  const downloadsCount = document.getElementById("downloadsCount");
 
   if (subjectsCount) subjectsCount.textContent = subjectsCache.length;
   if (categoriesCount) categoriesCount.textContent = categoriesCache.length;
   if (lessonsCount) lessonsCount.textContent = lessonsCache.length;
+  if (downloadsCount) downloadsCount.textContent = downloadLogsCache.length;
+}
+
+function renderDownloadLogs(searchTerm = "") {
+  const list = document.getElementById("downloadsList");
+  if (!list) return;
+
+  const search = searchTerm.trim().toLowerCase();
+
+  const filtered = downloadLogsCache.filter((item) => {
+    if (!search) return true;
+
+    const haystack = `${item.user_email || ""} ${item.user_name || ""} ${item.lesson_title || ""}`.toLowerCase();
+    return haystack.includes(search);
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<p class="empty-state">Nog geen downloads gevonden.</p>`;
+    return;
+  }
+
+  list.innerHTML = filtered
+    .map((item) => {
+      const userLabel = item.user_name
+        ? `${escapeHtml(item.user_name)} (${escapeHtml(item.user_email || "geen e-mail")})`
+        : escapeHtml(item.user_email || "Onbekende gebruiker");
+
+      return `
+        <div class="simple-list-item">
+          <div class="item-main">
+            <strong>${userLabel} heeft ${escapeHtml(item.lesson_title || "Onbekende les")}</strong>
+            <span class="list-meta">Gedownload op: ${formatDateTime(item.downloaded_at)}</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function setupDownloadSearch() {
+  const input = document.getElementById("downloadSearchInput");
+  if (!input) return;
+
+  input.addEventListener("input", () => {
+    renderDownloadLogs(input.value);
+  });
 }
 
 function setupTreeToggles() {
@@ -842,6 +907,7 @@ async function refreshAllData() {
   await loadSubjects();
   await loadCategories();
   await loadLessons();
+  await loadDownloadLogs();
 }
 
 function formatDateTime(value) {
@@ -876,6 +942,7 @@ async function initAdminDashboard() {
   setupCategoryForm();
   setupLessonForm();
   setupCreateUserForm();
+  setupDownloadSearch();
   setupDeleteActions();
 
   await refreshAllData();

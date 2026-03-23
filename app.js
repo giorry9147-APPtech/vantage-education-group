@@ -203,6 +203,7 @@ function updateLoginRoleContent(language, role) {
   const featureList = document.getElementById("roleFeatureList");
   const teacherRoleBtn = document.getElementById("teacherRoleBtn");
   const adminRoleBtn = document.getElementById("adminRoleBtn");
+  const signupBtn = document.getElementById("signupBtn");
 
   if (!roleBadge || !loginTitle || !loginSubtitle || !featureList) return;
 
@@ -217,6 +218,10 @@ function updateLoginRoleContent(language, role) {
     `;
     teacherRoleBtn?.classList.remove("active");
     adminRoleBtn?.classList.add("active");
+
+    if (signupBtn) {
+      signupBtn.style.display = "none";
+    }
   } else {
     roleBadge.textContent = dict.teacher_role;
     loginTitle.textContent = dict.login_title_teacher;
@@ -228,6 +233,10 @@ function updateLoginRoleContent(language, role) {
     `;
     teacherRoleBtn?.classList.add("active");
     adminRoleBtn?.classList.remove("active");
+
+    if (signupBtn) {
+      signupBtn.style.display = "inline-flex";
+    }
   }
 }
 
@@ -298,14 +307,18 @@ async function redirectIfAlreadyLoggedIn() {
 
   const { data: profile } = await window.supabaseClient
     .from("profiles")
-    .select("role")
+    .select("role, must_change_password")
     .eq("id", user.id)
     .single();
 
   if (!profile) return;
 
   if (profile.role === "admin") {
-    window.location.href = "admin-dashboard.html";
+    if (profile.must_change_password) {
+      window.location.href = "change-password.html";
+    } else {
+      window.location.href = "admin-dashboard.html";
+    }
   } else {
     window.location.href = "teacher-dashboard.html";
   }
@@ -326,8 +339,18 @@ async function handleSignup() {
   const email = document.getElementById("email")?.value.trim();
   const password = document.getElementById("password")?.value.trim();
   const language = localStorage.getItem("siteLanguage") || "nl";
+  const selectedRole = localStorage.getItem("selectedRole") || currentRole || "teacher";
 
   clearFormMessage();
+
+  if (selectedRole === "admin") {
+    setFormMessage(
+      language === "nl"
+        ? "Admins worden handmatig aangemaakt door de beheerder."
+        : "Admin accounts are created manually by the platform owner."
+    );
+    return;
+  }
 
   if (!email || !password) {
     setFormMessage(
@@ -422,7 +445,7 @@ function setupLoginForm() {
 
       const { data: profile, error: profileError } = await window.supabaseClient
         .from("profiles")
-        .select("role, full_name")
+        .select("role, full_name, must_change_password")
         .eq("id", user.id)
         .single();
 
@@ -460,7 +483,11 @@ function setupLoginForm() {
 
       setTimeout(() => {
         if (profile.role === "admin") {
-          window.location.href = "admin-dashboard.html";
+          if (profile.must_change_password) {
+            window.location.href = "change-password.html";
+          } else {
+            window.location.href = "admin-dashboard.html";
+          }
         } else {
           window.location.href = "teacher-dashboard.html";
         }

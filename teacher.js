@@ -288,7 +288,7 @@ function renderTeacherSubjectsTree() {
                                               <span class="list-note">${escapeHtml(lesson.note || "Geen notitie")}</span>
                                               ${
                                                 lesson.pdf_path
-                                                  ? `<button class="download-btn" type="button" data-pdf-path="${lesson.pdf_path}" data-file-name="${escapeHtml(
+                                                  ? `<button class="download-btn" type="button" data-lesson-id="${lesson.id}" data-lesson-title="${escapeHtml(lesson.title)}" data-pdf-path="${lesson.pdf_path}" data-file-name="${escapeHtml(
                                                       lesson.title
                                                     )}.pdf">Download PDF</button>`
                                                   : `<span class="list-meta">Geen PDF beschikbaar</span>`
@@ -433,7 +433,7 @@ function renderTeacherLessonsForCategory(categoryId) {
           <span class="list-note">${escapeHtml(lesson.note || "Geen notitie")}</span>
           ${
             lesson.pdf_path
-              ? `<button class="download-btn" type="button" data-pdf-path="${lesson.pdf_path}" data-file-name="${escapeHtml(
+              ? `<button class="download-btn" type="button" data-lesson-id="${lesson.id}" data-lesson-title="${escapeHtml(lesson.title)}" data-pdf-path="${lesson.pdf_path}" data-file-name="${escapeHtml(
                   lesson.title
                 )}.pdf">Download PDF</button>`
               : `<span class="list-meta">Geen PDF beschikbaar</span>`
@@ -466,6 +466,8 @@ function setupDownloadButtons() {
     if (!btn) return;
 
     const pdfPath = btn.dataset.pdfPath;
+    const lessonId = btn.dataset.lessonId;
+    const lessonTitle = btn.dataset.lessonTitle || "Onbekende les";
     if (!pdfPath) return;
 
     try {
@@ -480,6 +482,21 @@ function setupDownloadButtons() {
 
       if (!data?.signedUrl) {
         throw new Error("Downloadlink kon niet worden aangemaakt.");
+      }
+
+      const { error: logError } = await window.supabaseClient
+        .from("lesson_download_logs")
+        .insert({
+          lesson_id: lessonId || null,
+          lesson_title: lessonTitle,
+          pdf_path: pdfPath,
+          user_id: teacherUser?.id || null,
+          user_email: teacherUser?.email || null,
+          user_name: teacherProfile?.full_name || null
+        });
+
+      if (logError) {
+        console.warn("Downloadlog opslaan mislukt:", logError);
       }
 
       window.open(data.signedUrl, "_blank");

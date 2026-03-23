@@ -124,7 +124,8 @@ module.exports = async function handler(req, res) {
       {
         id: newUser.id,
         full_name: fullName || email,
-        role
+        role,
+        must_change_password: role === "admin"
       },
       { onConflict: "id" }
     );

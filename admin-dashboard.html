@@ -98,6 +98,11 @@
             <p>Totaal lessen</p>
             <h2 id="lessonsCount">0</h2>
           </article>
+
+          <article class="overview-card">
+            <p>PDF downloads (laatste 100)</p>
+            <h2 id="downloadsCount">0</h2>
+          </article>
         </div>
 
         <div class="dashboard-action-bar">
@@ -179,6 +184,18 @@
         <div class="admin-card">
           <h3>Recente lessen</h3>
           <div id="recentLessonsList" class="simple-list"></div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Downloadgeschiedenis</h3>
+          <div class="form-group">
+            <input
+              type="text"
+              id="downloadSearchInput"
+              placeholder="Zoek op e-mail of lesnaam"
+            />
+          </div>
+          <div id="downloadsList" class="simple-list"></div>
         </div>
       </section>
 
