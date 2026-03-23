@@ -1,0 +1,27 @@
+{
+  "name": "vantageeducationgroup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giorry9147-APPtech/vantage-education-group.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4"
+  },
+  "bugs": {
+    "url": "https://github.com/giorry9147-APPtech/vantage-education-group/issues"
+  },
+  "homepage": "https://github.com/giorry9147-APPtech/vantage-education-group#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.0"
+  }
+}

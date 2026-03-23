@@ -132,6 +132,24 @@ img {
   transform: translateY(-2px);
 }
 
+.top-signup-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #1f73d8, #0d4fa8);
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(31, 115, 216, 0.22);
+  transition: 0.2s ease;
+}
+
+.top-signup-btn:hover {
+  transform: translateY(-2px);
+}
+
 /* HOME */
 .hero {
   position: relative;
@@ -1322,6 +1340,10 @@ img {
     width: 100%;
   }
 
+  .top-signup-btn {
+    width: 100%;
+  }
+
   .logo {
     height: 44px;
   }
@@ -1564,5 +1586,75 @@ img {
 
   .admin-card {
     padding: 18px;
+  }
+}
+
+/* LOGIN FEEDBACK */
+.form-message {
+  margin: 6px 0 0;
+  min-height: 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #b42318;
+}
+
+.form-message.success {
+  color: #176f27;
+}
+
+.submit-btn.is-loading {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+/* TOASTS */
+.toast-container {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100% - 32px));
+}
+
+.toast {
+  border-radius: 16px;
+  padding: 14px 16px;
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 16px 32px rgba(20, 32, 60, 0.2);
+  animation: toastIn 0.22s ease;
+}
+
+.toast.success {
+  background: linear-gradient(135deg, #2d912f, #176f27);
+}
+
+.toast.error {
+  background: linear-gradient(135deg, #e25b52, #b42318);
+}
+
+.toast.info {
+  background: linear-gradient(135deg, #1f73d8, #0d4fa8);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .toast-container {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    width: auto;
   }
 }

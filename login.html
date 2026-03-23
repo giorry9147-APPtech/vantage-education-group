@@ -66,7 +66,7 @@
             <ul id="roleFeatureList">
               <li data-i18n="login_teacher_feature_1">Lessen bekijken per vak</li>
               <li data-i18n="login_teacher_feature_2">PDF’s downloaden</li>
-              <li data-i18n="login_teacher_feature_3">Notities van hoofdleerkracht lezen</li>
+              <li data-i18n="login_teacher_feature_3">Notities van de admin lezen</li>
             </ul>
           </div>
         </div>
@@ -87,7 +87,7 @@
                 id="adminRoleBtn"
                 type="button"
               >
-                <span data-i18n="admin_role">Hoofdleerkracht</span>
+                <span data-i18n="admin_role">Admin</span>
               </button>
             </div>
 
@@ -128,12 +128,14 @@
               </div>
 
               <button type="submit" class="submit-btn" id="submitBtn">
-                <span data-i18n="login_btn_main">Inloggen</span>
+                <span id="submitBtnText" data-i18n="login_btn_main">Inloggen</span>
               </button>
 
-              <p class="demo-note" id="demoNote">
-                Demo: deze knop stuurt nog niet naar Supabase, alleen frontend flow.
-              </p>
+              <button type="button" id="signupBtn" class="submit-btn" style="margin-top: 10px; background: linear-gradient(135deg,#1f73d8,#0d4fa8);">
+                Account aanmaken
+              </button>
+
+              <p class="form-message" id="formMessage"></p>
             </form>
 
             <div class="back-links">
@@ -148,5 +150,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
   <script src="app.js"></script>
+
+  <div id="toastContainer" class="toast-container"></div>
 </body>
 </html>

@@ -37,7 +37,7 @@ async function requireAdmin() {
 
   const adminName = document.getElementById("adminName");
   if (adminName) {
-    adminName.textContent = `Welkom, ${profile.full_name || "Hoofdleerkracht"}`;
+    adminName.textContent = `Welkom, ${profile.full_name || "Admin"}`;
   }
 
   return { user, profile };
@@ -727,6 +727,97 @@ function setupDeleteActions() {
   });
 }
 
+function setCreateUserMessage(message, type = "error") {
+  const el = document.getElementById("createUserMessage");
+  if (!el) return;
+
+  el.textContent = message;
+  el.className = `form-message ${type === "success" ? "success" : ""}`.trim();
+}
+
+function setCreateUserLoading(isLoading) {
+  const btn = document.getElementById("createUserSubmitBtn");
+  if (!btn) return;
+
+  btn.disabled = isLoading;
+  btn.textContent = isLoading ? "Bezig..." : "Gebruiker aanmaken";
+}
+
+function setupCreateUserForm() {
+  const form = document.getElementById("createUserForm");
+  if (!form) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("createUserEmail")?.value.trim();
+    const fullName = document.getElementById("createUserFullName")?.value.trim();
+    const role = document.getElementById("createUserRole")?.value;
+    const sendResetEmail = document.getElementById("createUserResetEmail")?.checked ?? true;
+
+    setCreateUserMessage("");
+
+    if (!email) {
+      setCreateUserMessage("Vul een geldig e-mailadres in.");
+      return;
+    }
+
+    if (!["teacher", "admin"].includes(role)) {
+      setCreateUserMessage("Ongeldige rol geselecteerd.");
+      return;
+    }
+
+    try {
+      setCreateUserLoading(true);
+
+      const {
+        data: { session },
+        error: sessionError
+      } = await window.supabaseClient.auth.getSession();
+
+      if (sessionError || !session?.access_token) {
+        throw new Error("Geen geldige admin-sessie gevonden. Log opnieuw in.");
+      }
+
+      const response = await fetch("/api/admin/create-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          email,
+          fullName,
+          role,
+          sendResetEmail
+        })
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.error || "Gebruiker aanmaken mislukt.");
+      }
+
+      form.reset();
+      const roleLabel = role === "admin" ? "admin" : "leerkracht";
+      const resetText = sendResetEmail
+        ? "Resetmail is verzonden."
+        : "Geen resetmail verstuurd.";
+
+      setCreateUserMessage(
+        `Gebruiker aangemaakt als ${roleLabel}. ${resetText}`,
+        "success"
+      );
+    } catch (error) {
+      console.error("Create user error:", error);
+      setCreateUserMessage(error.message || "Gebruiker aanmaken mislukt.");
+    } finally {
+      setCreateUserLoading(false);
+    }
+  });
+}
+
 function setupLogout() {
   const logoutBtn = document.getElementById("logoutBtn");
   if (!logoutBtn) return;
@@ -784,6 +875,7 @@ async function initAdminDashboard() {
   setupSubjectForm();
   setupCategoryForm();
   setupLessonForm();
+  setupCreateUserForm();
   setupDeleteActions();
 
   await refreshAllData();

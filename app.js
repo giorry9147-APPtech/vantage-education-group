@@ -1,25 +1,24 @@
-const translations = {
+﻿const translations = {
   nl: {
     nav_login: "Inloggen",
     hero_title: "Lesportaal voor leerkrachten",
-    hero_subtitle:
-      "Download lessen per vak, bekijk notities en werk vanuit één centrale omgeving.",
+    hero_subtitle: "Download lessen per vak, bekijk notities en werk vanuit één centrale omgeving.",
 
     teacher_card_title: "Inloggen als leerkracht",
     teacher_btn: "Inloggen als leerkracht",
     teacher_feature_1: "Veilige toegang voor leerkrachten",
     teacher_feature_2: "Download lessen eenvoudig per vak",
-    teacher_feature_3: "Notities van de hoofdleerkracht zichtbaar",
+    teacher_feature_3: "Notities van de admin zichtbaar",
 
-    admin_card_title: "Inloggen als hoofdleerkracht",
-    admin_btn: "Inloggen als hoofdleerkracht",
-    admin_feature_1: "Veilige toegang voor hoofdleerkrachten",
+    admin_card_title: "Inloggen als admin",
+    admin_btn: "Inloggen als admin",
+    admin_feature_1: "Veilige toegang voor admins",
     admin_feature_2: "Lessen per vak georganiseerd",
     admin_feature_3: "PDF's direct downloadbaar",
 
     how_title: "Hoe werkt het?",
     step1_title: "Log in",
-    step1_text: "Meld je aan als leerkracht of hoofdleerkracht.",
+    step1_text: "Meld je aan als leerkracht of admin.",
     step2_title: "Kies vak of categorie",
     step2_text: "Bekijk beschikbare lessen per vak of klas.",
     step3_title: "Download de les-PDF",
@@ -28,14 +27,14 @@ const translations = {
     footer_feature_1: "✔ Veilige toegang voor leerkrachten",
     footer_feature_2: "✔ PDF’s direct downloadbaar",
     footer_feature_3: "✔ Lessen per vak georganiseerd",
-    footer_feature_4: "✔ Notities van hoofdleerkracht zichtbaar",
+    footer_feature_4: "✔ Notities van admin zichtbaar",
     privacy: "Privacybeleid",
     terms: "Algemene voorwaarden",
 
     back_home: "Terug naar home",
     back_home_text: "← Terug naar home",
     teacher_role: "Leerkracht",
-    admin_role: "Hoofdleerkracht",
+    admin_role: "Admin",
     email_label: "E-mailadres",
     password_label: "Wachtwoord",
     remember_me: "Onthoud mij",
@@ -44,43 +43,38 @@ const translations = {
     login_info_title: "Wat kun je hier doen?",
 
     login_title_teacher: "Inloggen als leerkracht",
-    login_subtitle_teacher:
-      "Log in om lessen te downloaden, notities te bekijken en per vak te werken.",
+    login_subtitle_teacher: "Log in om lessen te downloaden, notities te bekijken en per vak te werken.",
     login_teacher_feature_1: "Lessen bekijken per vak",
     login_teacher_feature_2: "PDF’s downloaden",
-    login_teacher_feature_3: "Notities van hoofdleerkracht lezen",
+    login_teacher_feature_3: "Notities van de admin lezen",
 
-    login_title_admin: "Inloggen als hoofdleerkracht",
-    login_subtitle_admin:
-      "Log in om lessen te uploaden, categorieën te beheren en notities toe te voegen.",
+    login_title_admin: "Inloggen als admin",
+    login_subtitle_admin: "Log in om lessen te uploaden, categorieën te beheren en notities toe te voegen.",
     login_admin_feature_1: "Nieuwe lessen uploaden",
     login_admin_feature_2: "Vakken en categorieën beheren",
-    login_admin_feature_3: "Korte notities toevoegen",
-
-    login_loading: "Bezig met inloggen..."
+    login_admin_feature_3: "Korte notities toevoegen"
   },
 
   en: {
     nav_login: "Login",
     hero_title: "Lesson portal for teachers",
-    hero_subtitle:
-      "Download lessons by subject, read notes, and work from one central environment.",
+    hero_subtitle: "Download lessons by subject, read notes, and work from one central environment.",
 
     teacher_card_title: "Login as teacher",
     teacher_btn: "Login as teacher",
     teacher_feature_1: "Secure access for teachers",
     teacher_feature_2: "Download lessons easily by subject",
-    teacher_feature_3: "Notes from the lead teacher are visible",
+    teacher_feature_3: "Notes from the admin are visible",
 
-    admin_card_title: "Login as lead teacher",
-    admin_btn: "Login as lead teacher",
-    admin_feature_1: "Secure access for lead teachers",
+    admin_card_title: "Login as admin",
+    admin_btn: "Login as admin",
+    admin_feature_1: "Secure access for admins",
     admin_feature_2: "Lessons organized by subject",
     admin_feature_3: "PDFs directly downloadable",
 
     how_title: "How does it work?",
     step1_title: "Log in",
-    step1_text: "Sign in as teacher or lead teacher.",
+    step1_text: "Sign in as teacher or admin.",
     step2_title: "Choose subject or category",
     step2_text: "View available lessons by subject or class.",
     step3_title: "Download the lesson PDF",
@@ -89,14 +83,14 @@ const translations = {
     footer_feature_1: "✔ Secure access for teachers",
     footer_feature_2: "✔ PDFs directly downloadable",
     footer_feature_3: "✔ Lessons organized by subject",
-    footer_feature_4: "✔ Notes from lead teacher visible",
+    footer_feature_4: "✔ Notes from admin visible",
     privacy: "Privacy policy",
     terms: "Terms and conditions",
 
     back_home: "Back to home",
     back_home_text: "← Back to home",
     teacher_role: "Teacher",
-    admin_role: "Lead teacher",
+    admin_role: "Admin",
     email_label: "Email address",
     password_label: "Password",
     remember_me: "Remember me",
@@ -105,34 +99,73 @@ const translations = {
     login_info_title: "What can you do here?",
 
     login_title_teacher: "Login as teacher",
-    login_subtitle_teacher:
-      "Log in to download lessons, read notes and work by subject.",
+    login_subtitle_teacher: "Log in to download lessons, read notes and work by subject.",
     login_teacher_feature_1: "View lessons by subject",
     login_teacher_feature_2: "Download PDFs",
-    login_teacher_feature_3: "Read notes from the lead teacher",
+    login_teacher_feature_3: "Read notes from the admin",
 
-    login_title_admin: "Login as lead teacher",
-    login_subtitle_admin:
-      "Log in to upload lessons, manage categories and add notes.",
+    login_title_admin: "Login as admin",
+    login_subtitle_admin: "Log in to upload lessons, manage categories and add notes.",
     login_admin_feature_1: "Upload new lessons",
     login_admin_feature_2: "Manage subjects and categories",
-    login_admin_feature_3: "Add short notes",
-
-    login_loading: "Logging in..."
+    login_admin_feature_3: "Add short notes"
   }
 };
 
 const defaultLanguage = localStorage.getItem("siteLanguage") || "nl";
 const urlParams = new URLSearchParams(window.location.search);
-let currentRole = urlParams.get("role") || "teacher";
+let currentRole = urlParams.get("role") || localStorage.getItem("selectedRole") || "teacher";
 
-function getCurrentLanguage() {
-  return localStorage.getItem("siteLanguage") || "nl";
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+function setFormMessage(message, type = "error") {
+  const formMessage = document.getElementById("formMessage");
+  if (!formMessage) return;
+
+  formMessage.textContent = message;
+  formMessage.className = `form-message ${type === "success" ? "success" : ""}`.trim();
+}
+
+function clearFormMessage() {
+  const formMessage = document.getElementById("formMessage");
+  if (!formMessage) return;
+
+  formMessage.textContent = "";
+  formMessage.className = "form-message";
+}
+
+function setLoginLoading(isLoading) {
+  const submitBtn = document.getElementById("submitBtn");
+  const submitBtnText = document.getElementById("submitBtnText");
+  const currentLanguage = localStorage.getItem("siteLanguage") || "nl";
+
+  if (!submitBtn || !submitBtnText) return;
+
+  submitBtn.disabled = isLoading;
+  submitBtn.classList.toggle("is-loading", isLoading);
+
+  if (isLoading) {
+    submitBtnText.textContent = currentLanguage === "nl" ? "Bezig met inloggen..." : "Signing in...";
+  } else {
+    submitBtnText.textContent = translations[currentLanguage].login_btn_main;
+  }
 }
 
 function applyTranslations(language) {
-  const dict = translations[language] || translations.nl;
-
+  const dict = translations[language];
   document.documentElement.lang = language;
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
@@ -142,27 +175,27 @@ function applyTranslations(language) {
     }
   });
 
-  updateLanguageLabels(language);
-  updateLoginRoleContent(language, currentRole);
-}
-
-function updateLanguageLabels(language) {
   const langNl = document.getElementById("langLabelNl");
   const langEn = document.getElementById("langLabelEn");
 
-  if (!langNl || !langEn) return;
+  if (langNl && langEn) {
+    if (language === "nl") {
+      langNl.classList.add("lang-alt");
+      langEn.classList.remove("lang-alt");
+    } else {
+      langEn.classList.add("lang-alt");
+      langNl.classList.remove("lang-alt");
+    }
+  }
 
-  if (language === "nl") {
-    langNl.classList.add("lang-alt");
-    langEn.classList.remove("lang-alt");
-  } else {
-    langEn.classList.add("lang-alt");
-    langNl.classList.remove("lang-alt");
+  if (document.body.dataset.page === "login") {
+    updateLoginRoleContent(language, currentRole);
+    setLoginLoading(false);
   }
 }
 
 function updateLoginRoleContent(language, role) {
-  const dict = translations[language] || translations.nl;
+  const dict = translations[language];
 
   const roleBadge = document.getElementById("roleBadge");
   const loginTitle = document.getElementById("loginTitle");
@@ -199,16 +232,10 @@ function updateLoginRoleContent(language, role) {
 }
 
 function toggleLanguage() {
-  const currentLanguage = getCurrentLanguage();
+  const currentLanguage = localStorage.getItem("siteLanguage") || "nl";
   const nextLanguage = currentLanguage === "nl" ? "en" : "nl";
-
   localStorage.setItem("siteLanguage", nextLanguage);
   applyTranslations(nextLanguage);
-}
-
-function updateRoleInUrl(role) {
-  const path = window.location.pathname.split("/").pop() || "login.html";
-  history.replaceState({}, "", `${path}?role=${role}`);
 }
 
 function setupRoleButtons() {
@@ -217,15 +244,143 @@ function setupRoleButtons() {
 
   teacherRoleBtn?.addEventListener("click", () => {
     currentRole = "teacher";
-    updateLoginRoleContent(getCurrentLanguage(), currentRole);
-    updateRoleInUrl("teacher");
+    localStorage.setItem("selectedRole", currentRole);
+    updateLoginRoleContent(localStorage.getItem("siteLanguage") || "nl", currentRole);
+    history.replaceState({}, "", "login.html?role=teacher");
   });
 
   adminRoleBtn?.addEventListener("click", () => {
     currentRole = "admin";
-    updateLoginRoleContent(getCurrentLanguage(), currentRole);
-    updateRoleInUrl("admin");
+    localStorage.setItem("selectedRole", currentRole);
+    updateLoginRoleContent(localStorage.getItem("siteLanguage") || "nl", currentRole);
+    history.replaceState({}, "", "login.html?role=admin");
   });
+}
+
+function getFriendlyAuthError(message, language) {
+  const isDutch = language === "nl";
+
+  if (!message) {
+    return isDutch ? "Inloggen mislukt." : "Login failed.";
+  }
+
+  const lower = message.toLowerCase();
+
+  if (lower.includes("invalid login credentials")) {
+    return isDutch
+      ? "Onjuist e-mailadres of wachtwoord."
+      : "Incorrect email address or password.";
+  }
+
+  if (lower.includes("email not confirmed")) {
+    return isDutch
+      ? "Je e-mailadres is nog niet bevestigd."
+      : "Your email address has not been confirmed yet.";
+  }
+
+  if (lower.includes("failed to fetch")) {
+    return isDutch
+      ? "Netwerkfout. Controleer je internetverbinding."
+      : "Network error. Check your internet connection.";
+  }
+
+  return isDutch ? "Inloggen mislukt. Probeer opnieuw." : "Login failed. Please try again.";
+}
+
+async function redirectIfAlreadyLoggedIn() {
+  if (!window.supabaseClient || document.body.dataset.page !== "login") return;
+
+  const {
+    data: { user }
+  } = await window.supabaseClient.auth.getUser();
+
+  if (!user) return;
+
+  const { data: profile } = await window.supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) return;
+
+  if (profile.role === "admin") {
+    window.location.href = "admin-dashboard.html";
+  } else {
+    window.location.href = "teacher-dashboard.html";
+  }
+}
+
+function setupRememberMe() {
+  const emailInput = document.getElementById("email");
+  const rememberCheckbox = document.querySelector('.remember-row input[type="checkbox"]');
+  const rememberedEmail = localStorage.getItem("rememberedEmail");
+
+  if (emailInput && rememberedEmail) {
+    emailInput.value = rememberedEmail;
+    if (rememberCheckbox) rememberCheckbox.checked = true;
+  }
+}
+
+async function handleSignup() {
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value.trim();
+  const language = localStorage.getItem("siteLanguage") || "nl";
+
+  clearFormMessage();
+
+  if (!email || !password) {
+    setFormMessage(
+      language === "nl"
+        ? "Vul eerst e-mail en wachtwoord in."
+        : "Please enter email and password."
+    );
+    return;
+  }
+
+  try {
+    setLoginLoading(true);
+
+    const { data, error } = await window.supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: "Nieuwe gebruiker"
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    showToast(
+      language === "nl"
+        ? "Account aangemaakt! Check je e-mail."
+        : "Account created! Check your email.",
+      "success"
+    );
+
+    setFormMessage(
+      language === "nl"
+        ? "Account aangemaakt. Controleer je mail."
+        : "Account created. Check your email.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Signup error:", error);
+
+    showToast(
+      language === "nl"
+        ? "Signup mislukt."
+        : "Signup failed.",
+      "error"
+    );
+
+    setFormMessage(error.message);
+  } finally {
+    setLoginLoading(false);
+  }
 }
 
 function setupLoginForm() {
@@ -237,44 +392,33 @@ function setupLoginForm() {
 
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("password")?.value.trim();
-    const submitBtn = document.getElementById("submitBtn");
-    const currentLanguage = getCurrentLanguage();
-    const dict = translations[currentLanguage] || translations.nl;
+    const rememberCheckbox = document.querySelector('.remember-row input[type="checkbox"]');
+    const language = localStorage.getItem("siteLanguage") || "nl";
+    const selectedRole = localStorage.getItem("selectedRole") || currentRole || "teacher";
+
+    clearFormMessage();
 
     if (!email || !password) {
-      alert(
-        currentLanguage === "en"
-          ? "Please enter your email and password first."
-          : "Vul eerst e-mail en wachtwoord in."
-      );
+      const message =
+        language === "nl"
+          ? "Vul eerst e-mail en wachtwoord in."
+          : "Please enter your email and password first.";
+      setFormMessage(message);
       return;
     }
 
     try {
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = dict.login_loading || "Bezig...";
-      }
+      setLoginLoading(true);
 
-      const { data, error } =
-        await window.supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
+      const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       const user = data.user;
-
-      if (!user) {
-        throw new Error(
-          currentLanguage === "en"
-            ? "No user found after login."
-            : "Geen gebruiker gevonden na login."
-        );
-      }
+      if (!user) throw new Error("Geen gebruiker gevonden na login.");
 
       const { data: profile, error: profileError } = await window.supabaseClient
         .from("profiles")
@@ -282,39 +426,104 @@ function setupLoginForm() {
         .eq("id", user.id)
         .single();
 
-      if (profileError) {
-        throw profileError;
-      }
+      if (profileError) throw profileError;
+      if (!profile) throw new Error("Geen profiel gevonden voor deze gebruiker.");
 
-      if (!profile) {
-        throw new Error(
-          currentLanguage === "en"
-            ? "No profile found for this user."
-            : "Geen profiel gevonden voor deze gebruiker."
-        );
-      }
-
-      if (profile.role === "admin") {
-        window.location.href = "admin-dashboard.html";
-      } else if (profile.role === "teacher") {
-        window.location.href = "teacher-dashboard.html";
+      if (rememberCheckbox?.checked) {
+        localStorage.setItem("rememberedEmail", email);
       } else {
-        alert(
-          currentLanguage === "en"
-            ? "Unknown role found."
-            : "Onbekende rol gevonden."
-        );
+        localStorage.removeItem("rememberedEmail");
       }
+
+      if (selectedRole !== profile.role) {
+        if (profile.role === "teacher") {
+          showToast(
+            language === "nl"
+              ? "Je hebt een normale leerkracht account."
+              : "You have a regular teacher account.",
+            "info"
+          );
+        } else if (profile.role === "admin") {
+          showToast(
+            language === "nl"
+              ? "Je hebt een admin-account."
+              : "You have an admin account.",
+            "info"
+          );
+        }
+      }
+
+      setFormMessage(
+        language === "nl" ? "Succesvol ingelogd." : "Successfully signed in.",
+        "success"
+      );
+
+      setTimeout(() => {
+        if (profile.role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        } else {
+          window.location.href = "teacher-dashboard.html";
+        }
+      }, 700);
     } catch (error) {
       console.error("Login fout:", error);
-      alert(error.message || "Inloggen mislukt.");
+      const friendlyMessage = getFriendlyAuthError(error.message, language);
+      setFormMessage(friendlyMessage);
+      showToast(friendlyMessage, "error");
     } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `<span data-i18n="login_btn_main">${
-          (translations[getCurrentLanguage()] || translations.nl).login_btn_main
-        }</span>`;
-      }
+      setLoginLoading(false);
+    }
+  });
+}
+
+function setupForgotPassword() {
+  const forgotLink = document.querySelector(".forgot-link");
+  if (!forgotLink) return;
+
+  forgotLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email")?.value.trim();
+    const language = localStorage.getItem("siteLanguage") || "nl";
+
+    clearFormMessage();
+
+    if (!email) {
+      const msg =
+        language === "nl"
+          ? "Vul eerst je e-mailadres in."
+          : "Please enter your email address first.";
+      setFormMessage(msg);
+      showToast(msg, "error");
+      return;
+    }
+
+    try {
+      const redirectTo = `${window.location.origin}/reset-password.html`;
+
+      const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo
+      });
+
+      if (error) throw error;
+
+      const successMsg =
+        language === "nl"
+          ? "Reset e-mail verzonden. Controleer je inbox."
+          : "Reset email sent. Check your inbox.";
+
+      setFormMessage(successMsg, "success");
+      showToast(successMsg, "success");
+    } catch (error) {
+      console.error("Forgot password error:", error);
+
+      const msg =
+        language === "nl"
+          ? "Reset e-mail versturen mislukt."
+          : "Failed to send reset email.";
+
+      setFormMessage(msg);
+      showToast(msg, "error");
     }
   });
 }
@@ -323,9 +532,17 @@ function init() {
   const langToggle = document.getElementById("langToggle");
   langToggle?.addEventListener("click", toggleLanguage);
 
+  localStorage.setItem("selectedRole", currentRole);
+
   applyTranslations(defaultLanguage);
   setupRoleButtons();
+  setupRememberMe();
   setupLoginForm();
+  setupForgotPassword();
+  redirectIfAlreadyLoggedIn();
+
+  const signupBtn = document.getElementById("signupBtn");
+  signupBtn?.addEventListener("click", handleSignup);
 }
 
 document.addEventListener("DOMContentLoaded", init);
