@@ -203,7 +203,6 @@ function updateLoginRoleContent(language, role) {
   const featureList = document.getElementById("roleFeatureList");
   const teacherRoleBtn = document.getElementById("teacherRoleBtn");
   const adminRoleBtn = document.getElementById("adminRoleBtn");
-  const signupBtn = document.getElementById("signupBtn");
 
   if (!roleBadge || !loginTitle || !loginSubtitle || !featureList) return;
 
@@ -218,10 +217,6 @@ function updateLoginRoleContent(language, role) {
     `;
     teacherRoleBtn?.classList.remove("active");
     adminRoleBtn?.classList.add("active");
-
-    if (signupBtn) {
-      signupBtn.style.display = "none";
-    }
   } else {
     roleBadge.textContent = dict.teacher_role;
     loginTitle.textContent = dict.login_title_teacher;
@@ -233,10 +228,6 @@ function updateLoginRoleContent(language, role) {
     `;
     teacherRoleBtn?.classList.add("active");
     adminRoleBtn?.classList.remove("active");
-
-    if (signupBtn) {
-      signupBtn.style.display = "inline-flex";
-    }
   }
 }
 
@@ -332,77 +323,6 @@ function setupRememberMe() {
   if (emailInput && rememberedEmail) {
     emailInput.value = rememberedEmail;
     if (rememberCheckbox) rememberCheckbox.checked = true;
-  }
-}
-
-async function handleSignup() {
-  const email = document.getElementById("email")?.value.trim();
-  const password = document.getElementById("password")?.value.trim();
-  const language = localStorage.getItem("siteLanguage") || "nl";
-  const selectedRole = localStorage.getItem("selectedRole") || currentRole || "teacher";
-
-  clearFormMessage();
-
-  if (selectedRole === "admin") {
-    setFormMessage(
-      language === "nl"
-        ? "Admins worden handmatig aangemaakt door de beheerder."
-        : "Admin accounts are created manually by the platform owner."
-    );
-    return;
-  }
-
-  if (!email || !password) {
-    setFormMessage(
-      language === "nl"
-        ? "Vul eerst e-mail en wachtwoord in."
-        : "Please enter email and password."
-    );
-    return;
-  }
-
-  try {
-    setLoginLoading(true);
-
-    const { data, error } = await window.supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: "Nieuwe gebruiker"
-        }
-      }
-    });
-
-    if (error) throw error;
-
-    showToast(
-      language === "nl"
-        ? "Account aangemaakt! Check je e-mail."
-        : "Account created! Check your email.",
-      "success"
-    );
-
-    setFormMessage(
-      language === "nl"
-        ? "Account aangemaakt. Controleer je mail."
-        : "Account created. Check your email.",
-      "success"
-    );
-
-  } catch (error) {
-    console.error("Signup error:", error);
-
-    showToast(
-      language === "nl"
-        ? "Signup mislukt."
-        : "Signup failed.",
-      "error"
-    );
-
-    setFormMessage(error.message);
-  } finally {
-    setLoginLoading(false);
   }
 }
 
@@ -567,9 +487,6 @@ function init() {
   setupLoginForm();
   setupForgotPassword();
   redirectIfAlreadyLoggedIn();
-
-  const signupBtn = document.getElementById("signupBtn");
-  signupBtn?.addEventListener("click", handleSignup);
 }
 
 document.addEventListener("DOMContentLoaded", init);

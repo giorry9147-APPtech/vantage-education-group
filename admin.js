@@ -4,6 +4,9 @@ let subjectsCache = [];
 let categoriesCache = [];
 let lessonsCache = [];
 let downloadLogsCache = [];
+let profilesCache = {};
+let selectedAdminSubjectId = null;
+let selectedAdminCategoryId = null;
 
 async function requireAdmin() {
   const {
@@ -84,6 +87,22 @@ function setupTabs() {
     if (!switchBtn) return;
 
     activateTab(switchBtn.dataset.switchTab);
+  });
+}
+
+async function loadProfiles() {
+  const { data, error } = await window.supabaseClient
+    .from("profiles")
+    .select("id, full_name");
+
+  if (error) {
+    console.error("Fout bij ophalen profielen:", error);
+    return;
+  }
+
+  profilesCache = {};
+  (data || []).forEach((profile) => {
+    profilesCache[profile.id] = profile.full_name || "Onbekend";
   });
 }
 
@@ -319,6 +338,7 @@ function renderSubjectsTree() {
                                               <span class="list-meta">Les</span>
                                               <span class="list-meta">PDF: ${lesson.pdf_path ? "Ja" : "Nee"}</span>
                                               <span class="list-meta">Geüpload op: ${formatDateTime(lesson.created_at)}</span>
+                                              <span class="list-meta">Geüpload door: ${escapeHtml(profilesCache[lesson.created_by] || "Onbekend")}</span>
                                               <span class="list-note">${escapeHtml(lesson.note || "Geen notitie")}</span>
                                             </div>
 
@@ -410,6 +430,7 @@ function renderLessons() {
             <span class="list-meta">Categorie: ${escapeHtml(categoryName)}</span>
             <span class="list-meta">PDF: ${lesson.pdf_path ? "Ja" : "Nee"}</span>
             <span class="list-meta">Geüpload op: ${formatDateTime(lesson.created_at)}</span>
+            <span class="list-meta">Geüpload door: ${escapeHtml(profilesCache[lesson.created_by] || "Onbekend")}</span>
             <span class="list-note">${escapeHtml(lesson.note || "Geen notitie")}</span>
           </div>
           <div class="item-actions">
@@ -450,6 +471,7 @@ function renderRecentLessons() {
           <div class="item-main">
             <strong>${escapeHtml(lesson.title)}</strong>
             <span class="list-meta">Geüpload op: ${formatDateTime(lesson.created_at)}</span>
+            <span class="list-meta">Geüpload door: ${escapeHtml(profilesCache[lesson.created_by] || "Onbekend")}</span>
           </div>
         </div>
       `
@@ -900,11 +922,216 @@ function setupLogout() {
   });
 }
 
+function renderAdminFilesSubjectsGrid() {
+  const container = document.getElementById("adminFilesSubjectsGrid");
+  if (!container) return;
+
+  if (subjectsCache.length === 0) {
+    container.innerHTML = `<p class="empty-state">Nog geen vakken beschikbaar.</p>`;
+    return;
+  }
+
+  container.innerHTML = subjectsCache
+    .map((subject) => {
+      const categoryCount = categoriesCache.filter(
+        (category) => category.subject_id === subject.id
+      ).length;
+      const lessonCount = lessonsCache.filter(
+        (lesson) => lesson.categories?.subject_id === subject.id
+      ).length;
+
+      return `
+        <button
+          class="teacher-subject-btn admin-files-subject-btn"
+          data-subject-id="${subject.id}"
+          type="button"
+        >
+          <span class="teacher-subject-btn-title">${escapeHtml(subject.name)}</span>
+          <span class="list-meta">Categorieën: ${categoryCount}</span>
+          <span class="list-meta">Lessen: ${lessonCount}</span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function renderAdminFilesSubjectDetails(subjectId) {
+  const subject = subjectsCache.find((item) => item.id === subjectId);
+  const categoriesPanel = document.getElementById("adminFilesCategoriesPanel");
+  const lessonsPanel = document.getElementById("adminFilesLessonsPanel");
+  const title = document.getElementById("adminFilesSubjectTitle");
+  const subtitle = document.getElementById("adminFilesSubjectSubtitle");
+
+  if (!categoriesPanel || !lessonsPanel || !title || !subtitle) return;
+
+  if (!subject) {
+    title.textContent = "Nog geen vak gekozen";
+    subtitle.textContent = "Klik op een vak om categorieën en lessen te bekijken.";
+    categoriesPanel.innerHTML = "";
+    lessonsPanel.innerHTML = "";
+    return;
+  }
+
+  title.textContent = subject.name;
+  subtitle.textContent = "Kies een categorie om de lessen te bekijken.";
+
+  const subjectCategories = categoriesCache
+    .filter((category) => category.subject_id === subjectId)
+    .sort((a, b) => a.name.localeCompare(b.name, "nl"));
+
+  if (subjectCategories.length === 0) {
+    categoriesPanel.innerHTML = `<p class="empty-state">Geen categorieën beschikbaar.</p>`;
+    lessonsPanel.innerHTML = `<p class="empty-state">Geen lessen beschikbaar.</p>`;
+    return;
+  }
+
+  categoriesPanel.innerHTML = subjectCategories
+    .map(
+      (category) => `
+        <button class="teacher-category-btn admin-files-category-btn" data-category-id="${category.id}" type="button">
+          ${escapeHtml(category.name)}
+        </button>
+      `
+    )
+    .join("");
+
+  lessonsPanel.innerHTML = `<p class="empty-state">Kies een categorie om lessen te zien.</p>`;
+}
+
+function renderAdminFilesLessonsForCategory(categoryId) {
+  const lessonsPanel = document.getElementById("adminFilesLessonsPanel");
+  if (!lessonsPanel) return;
+
+  const lessons = lessonsCache
+    .filter((lesson) => lesson.category_id === categoryId)
+    .sort((a, b) => a.title.localeCompare(b.title, "nl"));
+
+  if (lessons.length === 0) {
+    lessonsPanel.innerHTML = `<p class="empty-state">Geen lessen in deze categorie.</p>`;
+    return;
+  }
+
+  lessonsPanel.innerHTML = lessons
+    .map(
+      (lesson) => `
+        <div class="teacher-lesson-card">
+          <strong>${escapeHtml(lesson.title)}</strong>
+          <span class="list-meta">Geüpload op: ${formatDateTime(lesson.created_at)}</span>
+          <span class="list-meta">Geüpload door: ${escapeHtml(profilesCache[lesson.created_by] || "Onbekend")}</span>
+          <span class="list-note">${escapeHtml(lesson.note || "Geen notitie")}</span>
+          ${
+            lesson.pdf_path
+              ? `<button class="download-btn" type="button" data-lesson-id="${lesson.id}" data-lesson-title="${escapeHtml(lesson.title)}" data-pdf-path="${lesson.pdf_path}" data-file-name="${escapeHtml(lesson.title)}.pdf">Download PDF</button>`
+              : `<span class="list-meta">Geen PDF beschikbaar</span>`
+          }
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderAdminFilesTab() {
+  renderAdminFilesSubjectsGrid();
+  if (selectedAdminSubjectId) {
+    renderAdminFilesSubjectDetails(selectedAdminSubjectId);
+  }
+  if (selectedAdminCategoryId) {
+    renderAdminFilesLessonsForCategory(selectedAdminCategoryId);
+  }
+}
+
+function setupAdminFilesBrowsing() {
+  document.addEventListener("click", (event) => {
+    const subjectBtn = event.target.closest(".admin-files-subject-btn");
+    if (subjectBtn) {
+      const subjectId = subjectBtn.dataset.subjectId;
+      selectedAdminSubjectId = subjectId;
+      selectedAdminCategoryId = null;
+      document
+        .querySelectorAll(".admin-files-subject-btn")
+        .forEach((item) => item.classList.remove("active"));
+      subjectBtn.classList.add("active");
+      renderAdminFilesSubjectDetails(subjectId);
+      return;
+    }
+
+    const categoryBtn = event.target.closest(".admin-files-category-btn");
+    if (categoryBtn) {
+      const categoryId = categoryBtn.dataset.categoryId;
+      selectedAdminCategoryId = categoryId;
+      document
+        .querySelectorAll(".admin-files-category-btn")
+        .forEach((item) => item.classList.remove("active"));
+      categoryBtn.classList.add("active");
+      renderAdminFilesLessonsForCategory(categoryId);
+      return;
+    }
+  });
+}
+
+function setupAdminDownloadButtons() {
+  document.addEventListener("click", async (event) => {
+    const btn = event.target.closest(".download-btn");
+    if (!btn) return;
+
+    const pdfPath = btn.dataset.pdfPath;
+    const lessonId = btn.dataset.lessonId;
+    const lessonTitle = btn.dataset.lessonTitle || "Onbekende les";
+    if (!pdfPath) return;
+
+    try {
+      btn.disabled = true;
+      btn.textContent = "Bezig...";
+
+      const { data, error } = await window.supabaseClient.storage
+        .from("lessons")
+        .createSignedUrl(pdfPath, 60);
+
+      if (error) throw error;
+
+      if (!data?.signedUrl) {
+        throw new Error("Downloadlink kon niet worden aangemaakt.");
+      }
+
+      const { error: logError } = await window.supabaseClient
+        .from("lesson_download_logs")
+        .insert({
+          lesson_id: lessonId || null,
+          lesson_title: lessonTitle,
+          pdf_path: pdfPath,
+          user_id: currentUser?.id || null,
+          user_email: currentUser?.email || null,
+          user_name: currentProfile?.full_name || null
+        });
+
+      if (logError) {
+        console.warn("Downloadlog opslaan mislukt:", logError);
+      }
+
+      const link = document.createElement("a");
+      link.href = data.signedUrl;
+      link.download = btn.dataset.fileName || `${lessonTitle}.pdf`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download fout:", error);
+      alert(error.message || "Download mislukt.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Download PDF";
+    }
+  });
+}
+
 async function refreshAllData() {
+  await loadProfiles();
   await loadSubjects();
   await loadCategories();
   await loadLessons();
   await loadDownloadLogs();
+  renderAdminFilesTab();
 }
 
 function formatDateTime(value) {
@@ -941,6 +1168,8 @@ async function initAdminDashboard() {
   setupLessonForm();
   setupDownloadSearch();
   setupDeleteActions();
+  setupAdminFilesBrowsing();
+  setupAdminDownloadButtons();
 
   await refreshAllData();
 }

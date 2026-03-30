@@ -47,24 +47,42 @@ function makeEmail(schoolCode) {
 async function createSchoolAccount({ school_code, password }) {
   const email = makeEmail(school_code);
 
-  const { data: existingProfile, error: profileCheckError } = await supabase
-    .from('profiles')
-    .select('id, email, school_code')
-    .eq('school_code', school_code)
-    .maybeSingle();
+  const { data: usersData, error: listUsersError } = await supabase.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
 
-  if (profileCheckError) {
-    console.error(`Fout bij checken profiel voor ${school_code}:`, profileCheckError.message);
+  if (listUsersError) {
+    console.error(`Fout bij ophalen users voor ${school_code}:`, listUsersError.message);
     return;
   }
 
-  if (existingProfile) {
-    console.log(`Overgeslagen: profiel bestaat al voor ${school_code} (${email})`);
-    return;
-  }
+  const existingAuthUser =
+    usersData?.users?.find((u) => (u.email || '').toLowerCase() === email.toLowerCase()) || null;
 
-  const { data: createdUser, error: createUserError } =
-    await supabase.auth.admin.createUser({
+  let user = null;
+
+  if (existingAuthUser) {
+    const { data: updatedUser, error: updateUserError } = await supabase.auth.admin.updateUserById(
+      existingAuthUser.id,
+      {
+        password,
+        email_confirm: true,
+        user_metadata: {
+          school_code,
+          role: 'teacher',
+        },
+      }
+    );
+
+    if (updateUserError) {
+      console.error(`Fout bij updaten auth user voor ${school_code}:`, updateUserError.message);
+      return;
+    }
+
+    user = updatedUser.user;
+  } else {
+    const { data: createdUser, error: createUserError } = await supabase.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -74,15 +92,32 @@ async function createSchoolAccount({ school_code, password }) {
       },
     });
 
-  if (createUserError) {
-    console.error(`Fout bij aanmaken auth user voor ${school_code}:`, createUserError.message);
-    return;
-  }
+    if (createUserError) {
+      console.error(`Fout bij aanmaken auth user voor ${school_code}:`, createUserError.message);
+      return;
+    }
 
-  const user = createdUser.user;
+    user = createdUser.user;
+  }
 
   if (!user) {
     console.error(`Geen user teruggekregen voor ${school_code}`);
+    return;
+  }
+
+  const { data: existingProfile, error: profileCheckError } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (profileCheckError) {
+    console.error(`Fout bij checken profiel voor ${school_code}:`, profileCheckError.message);
+    return;
+  }
+
+  if (existingProfile) {
+    console.log(`Geupdate: ${school_code} -> ${email}`);
     return;
   }
 
@@ -90,8 +125,6 @@ async function createSchoolAccount({ school_code, password }) {
     .from('profiles')
     .insert({
       id: user.id,
-      email,
-      school_code,
       role: 'teacher',
     });
 

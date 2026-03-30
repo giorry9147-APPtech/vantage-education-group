@@ -62,6 +62,14 @@
           >
             Lessen
           </button>
+
+          <button
+            class="admin-nav-link"
+            data-tab="files-section"
+            type="button"
+          >
+            Bestanden bekijken
+          </button>
         </nav>
       </div>
 
@@ -397,6 +405,44 @@
         <div class="admin-card">
           <h3>Bestaande lessen</h3>
           <div id="lessonsList" class="simple-list"></div>
+        </div>
+      </section>
+
+      <!-- BESTANDEN BEKIJKEN -->
+      <section id="files-section" class="admin-tab-section">
+        <div class="admin-section-header">
+          <div>
+            <p class="section-kicker">Overzicht</p>
+            <h2>Bestanden bekijken</h2>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Kies een vak</h3>
+          <div id="adminFilesSubjectsGrid" class="dashboard-subjects-grid"></div>
+        </div>
+
+        <div class="admin-card">
+          <div class="teacher-selection-header">
+            <div>
+              <h3 id="adminFilesSubjectTitle">Nog geen vak gekozen</h3>
+              <p id="adminFilesSubjectSubtitle" class="list-meta">
+                Klik op een vak om categorieën en lessen te bekijken.
+              </p>
+            </div>
+          </div>
+
+          <div class="teacher-two-column">
+            <div>
+              <h4 class="teacher-panel-title">Categorieën</h4>
+              <div id="adminFilesCategoriesPanel" class="simple-list"></div>
+            </div>
+
+            <div>
+              <h4 class="teacher-panel-title">Lessen</h4>
+              <div id="adminFilesLessonsPanel" class="simple-list"></div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
