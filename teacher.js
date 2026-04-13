@@ -587,6 +587,8 @@ async function initTeacherDashboard() {
   const teacherAccess = await requireTeacher();
   if (!teacherAccess) return;
 
+  await loadSchoolBranding(teacherProfile.school_id);
+
   setupTeacherTabs();
   setupTeacherTreeToggles();
   setupTeacherSubjectButtons();

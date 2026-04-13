@@ -1170,6 +1170,8 @@ async function initAdminDashboard() {
   const adminAccess = await requireAdmin();
   if (!adminAccess) return;
 
+  await loadSchoolBranding(currentProfile.school_id);
+
   setupTabs();
   setupTreeToggles();
   setupLogout();
