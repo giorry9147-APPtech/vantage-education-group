@@ -2,17 +2,45 @@
 
 let currentSchool = null;
 
+const SCHOOL_COLUMNS = "id, name, slug, logo_url, domain, primary_color, secondary_color, accent_color";
+
+// Laad branding op basis van school ID (na login)
 async function loadSchoolBranding(schoolId) {
   if (!schoolId) return null;
 
   const { data, error } = await window.supabaseClient
     .from("schools")
-    .select("id, name, slug, logo_url, primary_color, secondary_color, accent_color")
+    .select(SCHOOL_COLUMNS)
     .eq("id", schoolId)
     .single();
 
   if (error || !data) {
     console.warn("School branding laden mislukt:", error);
+    return null;
+  }
+
+  currentSchool = data;
+  applyBranding(data);
+  return data;
+}
+
+// Laad branding op basis van huidig domein (vóór login)
+async function loadSchoolBrandingByDomain() {
+  const hostname = window.location.hostname;
+
+  // Lokaal of standaard Vercel domein → default school
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return null;
+  }
+
+  const { data, error } = await window.supabaseClient
+    .from("schools")
+    .select(SCHOOL_COLUMNS)
+    .eq("domain", hostname)
+    .single();
+
+  if (error || !data) {
+    // Geen match = default school, geen branding override
     return null;
   }
 
@@ -39,23 +67,39 @@ function applyBranding(school) {
     root.style.setProperty("--school-accent-dark", darkenColor(school.accent_color, 20));
   }
 
-  // Logo vervangen
+  // Logo vervangen (sidebar + topbar + favicon)
   if (school.logo_url) {
     document.querySelectorAll(".admin-logo, .logo").forEach((img) => {
       img.src = school.logo_url;
       img.alt = school.name + " logo";
     });
+
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+      favicon.href = school.logo_url;
+    }
   }
 
   // Schoolnaam in page title
   if (school.name) {
     const baseTitle = document.title.replace(/- .+$/, "").trim();
     document.title = baseTitle + " - " + school.name;
+
+    // Theme color voor mobiel
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor && school.primary_color) {
+      themeColor.content = school.primary_color;
+    }
   }
 
   // Schoolnaam in eventuele branding-elementen
   document.querySelectorAll("[data-school-name]").forEach((el) => {
     el.textContent = school.name;
+  });
+
+  // Copyright footer
+  document.querySelectorAll(".copyright").forEach((el) => {
+    el.textContent = el.textContent.replace("Vantage Education Group", school.name);
   });
 }
 
