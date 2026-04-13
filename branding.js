@@ -45,11 +45,11 @@ async function loadSchoolBrandingByDomain() {
   }
 
   currentSchool = data;
-  applyBranding(data);
+  applyBranding(data, { skipLogo: true });
   return data;
 }
 
-function applyBranding(school) {
+function applyBranding(school, options = {}) {
   // Kleuren toepassen via CSS custom properties
   const root = document.documentElement;
 
@@ -67,8 +67,8 @@ function applyBranding(school) {
     root.style.setProperty("--school-accent-dark", darkenColor(school.accent_color, 20));
   }
 
-  // Logo vervangen (sidebar + topbar + favicon)
-  if (school.logo_url) {
+  // Logo vervangen (sidebar + topbar + favicon) — alleen na login
+  if (school.logo_url && !options.skipLogo) {
     document.querySelectorAll(".admin-logo, .logo").forEach((img) => {
       img.src = school.logo_url;
       img.alt = school.name + " logo";
