@@ -77,6 +77,7 @@ module.exports = async function handler(req, res) {
   }
   const fullName = String(body.fullName || "").trim();
   const email = String(body.email || "").trim().toLowerCase();
+  const schoolId = body.schoolId || null;
 
   if (!fullName || !email) {
     return json(res, 400, { error: "fullName and email are required." });
@@ -102,7 +103,8 @@ module.exports = async function handler(req, res) {
           id: newUserId,
           full_name: fullName,
           role: "admin",
-          must_change_password: true
+          must_change_password: true,
+          school_id: schoolId
         },
         { onConflict: "id" }
       );

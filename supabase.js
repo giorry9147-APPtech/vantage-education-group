@@ -6,4 +6,4 @@ window.supabaseClient = window.supabase.createClient(
   SUPABASE_ANON_KEY
 )
 
-console.log("Supabase connected:", supabase)
+console.log("Supabase connected:", window.supabaseClient)

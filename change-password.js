@@ -46,7 +46,7 @@ async function requireForcedPasswordChange() {
 
   const { data: profile, error: profileError } = await window.supabaseClient
     .from("profiles")
-    .select("id, role, must_change_password")
+    .select("id, role, must_change_password, school_id")
     .eq("id", user.id)
     .single();
 
@@ -55,7 +55,7 @@ async function requireForcedPasswordChange() {
     return null;
   }
 
-  if (profile.role !== "admin") {
+  if (profile.role !== "admin" && profile.role !== "superadmin") {
     window.location.href = "teacher-dashboard.html";
     return null;
   }

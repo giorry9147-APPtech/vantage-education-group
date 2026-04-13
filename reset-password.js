@@ -85,8 +85,8 @@ function setupResetForm() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      setResetMessage("Je wachtwoord moet minimaal 6 tekens hebben.");
+    if (newPassword.length < 8) {
+      setResetMessage("Je wachtwoord moet minimaal 8 tekens hebben.");
       return;
     }
 

@@ -21,7 +21,7 @@ async function requireAdmin() {
 
   const { data: profile, error: profileError } = await window.supabaseClient
     .from("profiles")
-    .select("id, full_name, role, must_change_password")
+    .select("id, full_name, role, must_change_password, school_id")
     .eq("id", user.id)
     .single();
 
@@ -31,7 +31,7 @@ async function requireAdmin() {
     return null;
   }
 
-  if (profile.role !== "admin") {
+  if (profile.role !== "admin" && profile.role !== "superadmin") {
     window.location.href = "teacher-dashboard.html";
     return null;
   }
@@ -93,7 +93,8 @@ function setupTabs() {
 async function loadProfiles() {
   const { data, error } = await window.supabaseClient
     .from("profiles")
-    .select("id, full_name");
+    .select("id, full_name")
+    .eq("school_id", currentProfile.school_id);
 
   if (error) {
     console.error("Fout bij ophalen profielen:", error);
@@ -110,6 +111,7 @@ async function loadSubjects() {
   const { data, error } = await window.supabaseClient
     .from("subjects")
     .select("id, name, created_at")
+    .eq("school_id", currentProfile.school_id)
     .order("name", { ascending: true });
 
   if (error) {
@@ -137,6 +139,7 @@ async function loadCategories() {
         name
       )
     `)
+    .eq("school_id", currentProfile.school_id)
     .order("name", { ascending: true });
 
   if (error) {
@@ -160,6 +163,7 @@ async function loadLessons() {
       note,
       pdf_path,
       created_at,
+      created_by,
       category_id,
       categories (
         id,
@@ -171,6 +175,7 @@ async function loadLessons() {
         )
       )
     `)
+    .eq("school_id", currentProfile.school_id)
     .order("title", { ascending: true });
 
   if (error) {
@@ -189,6 +194,7 @@ async function loadDownloadLogs() {
   const { data, error } = await window.supabaseClient
     .from("lesson_download_logs")
     .select("id, lesson_title, user_email, user_name, downloaded_at")
+    .eq("school_id", currentProfile.school_id)
     .order("downloaded_at", { ascending: false })
     .limit(100);
 
@@ -617,7 +623,8 @@ function setupCreateAdminForm() {
         },
         body: JSON.stringify({
           fullName,
-          email
+          email,
+          schoolId: currentProfile.school_id
         })
       });
 
@@ -688,7 +695,8 @@ function setupSubjectForm() {
 
       const { error } = await window.supabaseClient.from("subjects").insert({
         name,
-        created_by: currentUser.id
+        created_by: currentUser.id,
+        school_id: currentProfile.school_id
       });
 
       if (error) {
@@ -734,7 +742,8 @@ function setupCategoryForm() {
       const { error } = await window.supabaseClient.from("categories").insert({
         subject_id: subjectId,
         name: categoryName,
-        created_by: currentUser.id
+        created_by: currentUser.id,
+        school_id: currentProfile.school_id
       });
 
       if (error) {
@@ -810,7 +819,8 @@ function setupLessonForm() {
           title,
           note,
           pdf_path: filePath,
-          created_by: currentUser.id
+          created_by: currentUser.id,
+          school_id: currentProfile.school_id
         });
 
       if (insertError) throw insertError;
@@ -1101,7 +1111,8 @@ function setupAdminDownloadButtons() {
           pdf_path: pdfPath,
           user_id: currentUser?.id || null,
           user_email: currentUser?.email || null,
-          user_name: currentProfile?.full_name || null
+          user_name: currentProfile?.full_name || null,
+          school_id: currentProfile?.school_id || null
         });
 
       if (logError) {

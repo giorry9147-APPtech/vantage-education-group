@@ -19,7 +19,7 @@ async function requireTeacher() {
 
   const { data: profile, error: profileError } = await window.supabaseClient
     .from("profiles")
-    .select("id, full_name, role")
+    .select("id, full_name, role, school_id")
     .eq("id", user.id)
     .single();
 
@@ -80,6 +80,7 @@ async function loadTeacherSubjects() {
   const { data, error } = await window.supabaseClient
     .from("subjects")
     .select("id, name, created_at")
+    .eq("school_id", teacherProfile.school_id)
     .order("name", { ascending: true });
 
   if (error) {
@@ -106,6 +107,7 @@ async function loadTeacherCategories() {
         name
       )
     `)
+    .eq("school_id", teacherProfile.school_id)
     .order("name", { ascending: true });
 
   if (error) {
@@ -142,6 +144,7 @@ async function loadTeacherLessons() {
         )
       )
     `)
+    .eq("school_id", teacherProfile.school_id)
     .order("title", { ascending: true });
 
   if (error) {
@@ -492,7 +495,8 @@ function setupDownloadButtons() {
           pdf_path: pdfPath,
           user_id: teacherUser?.id || null,
           user_email: teacherUser?.email || null,
-          user_name: teacherProfile?.full_name || null
+          user_name: teacherProfile?.full_name || null,
+          school_id: teacherProfile?.school_id || null
         });
 
       if (logError) {

@@ -298,13 +298,13 @@ async function redirectIfAlreadyLoggedIn() {
 
   const { data: profile } = await window.supabaseClient
     .from("profiles")
-    .select("role, must_change_password")
+    .select("role, must_change_password, school_id")
     .eq("id", user.id)
     .single();
 
   if (!profile) return;
 
-  if (profile.role === "admin") {
+  if (profile.role === "admin" || profile.role === "superadmin") {
     if (profile.must_change_password) {
       window.location.href = "change-password.html";
     } else {
@@ -365,7 +365,7 @@ function setupLoginForm() {
 
       const { data: profile, error: profileError } = await window.supabaseClient
         .from("profiles")
-        .select("role, full_name, must_change_password")
+        .select("role, full_name, must_change_password, school_id")
         .eq("id", user.id)
         .single();
 
@@ -402,7 +402,7 @@ function setupLoginForm() {
       );
 
       setTimeout(() => {
-        if (profile.role === "admin") {
+        if (profile.role === "admin" || profile.role === "superadmin") {
           if (profile.must_change_password) {
             window.location.href = "change-password.html";
           } else {
